@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11 console
@@ -25,10 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    tracer.cpp \
+    consolebufferwindows.cpp \
+    visualobject.cpp \
+    visualizer.cpp \
+    glwidget.cpp \
+    utils.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    utils.h \
+    tracer.h \
+    consolebufferwindows.h \
+    visualobject.h \
+    visualizer.h \
+    glwidget.h
 
 FORMS += \
         mainwindow.ui
@@ -38,5 +50,10 @@ win32: LIBS += -L$$PWD/../../../lua/ -llua53
 INCLUDEPATH += $$PWD/../../../lua
 DEPENDPATH += $$PWD/../../../lua
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../../lua/lua53.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../lua/liblua53.a
+LIBS += -lopengl32
+
+#LIBS += -lglu32
+# LuaJIT (c:/LuaJIT)
+INCLUDEPATH += c:/Lua/include
+LIBS += -Lc:/Lua -llua53
+# c:/LuaJIT/lua51.dll
