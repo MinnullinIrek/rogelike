@@ -1,5 +1,7 @@
 #include "visualizer.h"
 
+
+
 void SetColor(HANDLE h, Color text, Color background);
 Visualizer::Visualizer(QObject *parent) : QObject(parent)
 {
@@ -9,7 +11,7 @@ Visualizer::Visualizer(QObject *parent) : QObject(parent)
         setActiveBuffer(*handle);
         handle++;
 
-        connect(this, &Visualizer::toPut, this, &Visualizer::putchar);
+        //connect(this, &Visualizer::toPut, this, &Visualizer::putchar);
 
 }
 
@@ -33,37 +35,29 @@ void Visualizer::setActiveBuffer(HANDLE h)
 }
 static LPDWORD logD2 = new DWORD;
 
-VisObject visObject;
-void Visualizer::putchar()//const VisObject & visObject
+
+
+
+void Visualizer::putchar(wchar_t text[], int count, int cdx, int cdy, int bg, int fg)//const VisObject & visObject
 {
-
-//    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-//    SetConsoleTextAttribute(handle, FOREGROUND_RED);
-//    printf("%s", "asdfg");
-
-//    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cd = {cdx, cdy};
 
 
-//    SetConsoleTextAttribute(handle, FOREGROUND_RED);
+    WriteConsoleOutputCharacter(*handle, text, count, cd, logD2);
+    WORD wColors =  (static_cast<WORD>(bg) << 4) | static_cast<WORD>(fg);//(fg | bg);
 
-    visObject.bgColor = Color::Blue;
-    visObject.objColor = Color::Green;
-    visObject.ch = L"D";
-    //setActiveBuffer(*handle);
-//SetColor(handle, Color::DarkGray , Color::Black);
+    for(int i = 0; i < count; i++, cd.X++){
 
-    SetConsoleTextAttribute(*handle, FOREGROUND_RED | BACKGROUND_BLUE);
-    WriteConsoleOutputCharacter(*handle, visObject.ch.c_str(), 1, COORD{1,1}, logD2);
+        WriteConsoleOutputAttribute(*handle, &wColors, 1, cd, logD2);
+    }
 
- //   SetColor(*handle, visObject.objColor , visObject.bgColor);
-    WriteConsoleOutputCharacter(*handle, visObject.ch.c_str(), 1, COORD{2,1}, logD2);
-
-    changeBuffer();
+   // changeBuffer();
 }
 
 void SetColor(HANDLE h, Color text, Color background)
 {
     SetConsoleTextAttribute(h, (static_cast<WORD>(background) << 4) | static_cast<WORD>(text));
 }
+
+
 

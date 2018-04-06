@@ -8,6 +8,7 @@
 #include "glwidget.h"
 #include <thread>
 
+
 extern "C" {
 # include <lua.h>
 # include <lauxlib.h>
@@ -24,6 +25,7 @@ Visualizer con;
 QThread thread;
 
 int luaopen_mylib (lua_State *L) {
+
     // luaL_newlib(L, glLib);
 
     //luaL_openlibsL, "glib", glLib, 0);
@@ -37,6 +39,17 @@ int luaopen_mylib (lua_State *L) {
     luaL_setfuncs(L, glLib, 0);
     lua_setglobal(L, "glLib");
 
+
+
+    lua_getglobal(L, "conLib");
+    if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
+        lua_newtable(L);
+    }
+    luaL_setfuncs(L, conLib, 0);
+    lua_setglobal(L, "conLib");
+
+
     return 1;
 }
 
@@ -44,6 +57,8 @@ int luaopen_mylib (lua_State *L) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+
 
 //    wgl = new GLWidget;
 

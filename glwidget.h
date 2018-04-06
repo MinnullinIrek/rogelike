@@ -73,6 +73,7 @@ static Tracer *tarcer;
 
 static int l_show (lua_State *L) {
     wgl = new GLWidget(L);
+    const char* c = lua_tostring(L, 1);
     //emit wgl->showex();
     printf("%s", "l_show");
     tarcer = new Tracer;

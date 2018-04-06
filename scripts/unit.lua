@@ -1,5 +1,8 @@
 local M = {}
 
+local rockSymb = '#'
+
+
 local Unit = 
 {
 	name = '0',
@@ -13,5 +16,12 @@ local Unit =
 function M.createUnit(name, ch, utype)
 	return setmetatable({name = name, ch = ch, utype = utype}, Unit)	
 end
+
+function M.createRock()
+	return M.createUnit('rock', rockSymb )
+	
+end
+
+
 
 return M
