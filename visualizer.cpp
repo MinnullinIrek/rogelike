@@ -38,12 +38,12 @@ static LPDWORD logD2 = new DWORD;
 
 
 
-void Visualizer::putchar(wchar_t text[], int count, int cdx, int cdy, int bg, int fg)//const VisObject & visObject
+void Visualizer::putchar(const char text[], int count, int cdx, int cdy, int bg, int fg)//const VisObject & visObject
 {
     COORD cd = {cdx, cdy};
 
 
-    WriteConsoleOutputCharacter(*handle, text, count, cd, logD2);
+    WriteConsoleOutputCharacterA(*handle, text, count, cd, logD2);
     WORD wColors =  (static_cast<WORD>(bg) << 4) | static_cast<WORD>(fg);//(fg | bg);
 
     for(int i = 0; i < count; i++, cd.X++){
@@ -51,7 +51,7 @@ void Visualizer::putchar(wchar_t text[], int count, int cdx, int cdy, int bg, in
         WriteConsoleOutputAttribute(*handle, &wColors, 1, cd, logD2);
     }
 
-   // changeBuffer();
+    //changeBuffer();
 }
 
 void SetColor(HANDLE h, Color text, Color background)

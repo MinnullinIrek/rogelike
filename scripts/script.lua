@@ -33,7 +33,7 @@ end
  
 glLib.show("dsdfs1", "sdfsdf2")
 
-print ("hi lua")
+print ("хпппп lua")
 
 print("conLib", conLib.putCh)
 
@@ -54,12 +54,22 @@ print("color = ", color);
 
 print(pcall(function()
 	print("print before")	
-	local m = require 'map'
+	local map = require 'map'
 	local console = require 'console'
 	
 	
+	 -- while true do
+		-- local i = console.getCh()
+		-- print('i = ', i)
+		
+	 -- end
+	-- print('map', map)
 	
 	
-	print("print after")	
+	
+	
+	
+	
+	-- print("print after")	
  
  end))

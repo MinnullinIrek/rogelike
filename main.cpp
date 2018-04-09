@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QThread>
+#include <iostream>
 
 #include "utils.h"
 #include "consolebufferwindows.h"
@@ -57,6 +58,7 @@ int luaopen_mylib (lua_State *L) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    setlocale(LC_ALL,"Russian");
 
 
 

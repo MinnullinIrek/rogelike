@@ -4,6 +4,7 @@
 #include <QObject>
 #include <windows.h>
 #include <array>
+#include <conio.h>
 
 extern "C" {
 # include <lua.h>
@@ -36,7 +37,7 @@ class Visualizer : public QObject
 public:
     explicit Visualizer(QObject *parent = nullptr);
     void changeBuffer();
-    void putchar(wchar_t text[], int count, int cdx, int cdy, int bg, int fg);
+    void putchar(const char text[], int count, int cdx, int cdy, int bg, int fg);
 signals:
     void toPut();//const VisObject & visObject
 public slots:
@@ -63,7 +64,9 @@ static int l_putCh (lua_State *L) {
         wch[i] = (wchar_t)ch[i];
     }
 
-    con.putchar(wch, len, cdX, cdY, colorBg, colorFg);
+    mbstowcs (wch, ch, len);
+
+    con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
 
     return 0;
 }
@@ -71,7 +74,21 @@ static int l_putCh (lua_State *L) {
 static int l_changeBuffer(lua_State *L)
 {
     con.changeBuffer();
+    return 0;
 }
+
+static int l_getch(lua_State *L)
+{
+//    int i = 0;
+//    while (true){
+    int i = getch();
+//    }
+
+    lua_pushinteger(L, i);
+
+    return 1;
+}
+
 
 static const struct luaL_Reg conLib [] = {
 
@@ -79,6 +96,7 @@ static const struct luaL_Reg conLib [] = {
 
     {"putCh",           l_putCh}, //text, bg, fg
     {"changeBuffer",    l_changeBuffer},
+    {"getch",           l_getch},           //() => intsymb
 
 
 
