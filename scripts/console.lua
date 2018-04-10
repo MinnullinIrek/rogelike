@@ -18,6 +18,8 @@ local consts = {
 	logTbl  = {x = 51, y = 51, height = 20, width = 40 },
 	consoleSize = {x = 100, y = 100},
 	
+	inventoryTbl = {x = 2, y = 2, height = 50, width = 50}
+	
 	
 
 }
@@ -124,6 +126,9 @@ function printHero()
 end
 
 function printText(tbl, key)
+	if oprint then
+	oprint(tbl,key)
+	end
 	local t = tbl.messages
 	traceTable(t)
 	count = 0
@@ -153,16 +158,55 @@ end
 
 print('map.map', map.map)
 print('map.map.getCell', map.map.getCell)
+function update()
+	printTables()
+	printMap(map.map);
+	printHero()
+	printText(Text, 'textTbl')
+	printText(Log, 'logTbl')
 
-printMap(map.map);
-printHero()
-printText(Text, 'textTbl')
-printText(Log, 'logTbl')
-
-conLib.changeBuffer();
+	conLib.changeBuffer();
+end
 
 
 
+oprint = print
+
+function showTable(tbl, fstr, constTbl)
+	Log.putMessage("showTable  ")
+	for i, item in ipairs(tbl) do
+		Log.putMessage("showTable  "..i)
+		local str = fstr(item)
+			Log.putMessage("showTable  " .. str)
+		putCh(str, constTbl.x+1, constTbl.y+i)
+	end
+end
+
+function showBag()
+	
+	drawTable(consts.inventoryTbl)
+	showTable(Unit.hero.inventory.bag, function(item) return string.format("%s  %s", item.ch, item.name) end, consts.inventoryTbl)
+	printText(Log, 'logTbl')
+	conLib.changeBuffer();
+end
+
+
+update()
+
+local bag = nil
+function M.changeRejim(i)
+	
+	if     i == 'map' then
+		
+		M.update = update
+	elseif i == 'bag' then
+		Log.putMessage("changeRejim "..i)
+		-- Log.putMessage("changeRejim bag")
+		M.update = showBag
+	end
+end
+
+M.update = update
 
 
 return M

@@ -20,10 +20,6 @@ function M.createCell()
 	return setmetatable({}, Cell)
 end
 
-function M.setUnit(unit)
-	
-	
-end
 
 
 

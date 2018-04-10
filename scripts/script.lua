@@ -51,25 +51,43 @@ print("color = ", color);
 
 -- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
 
+function setTestItem(unit, Item)
+	for i = 1, 10 do
+		local item = Item.createItem('item 1', i)
+		unit.inventory:putItem(item)
+		
+	end
+end
+
 
 print(pcall(function()
-	print("print before")	
+	
+	print("print before")
+	local Dir = require 'direction'
 	local map = require 'map'
 	local console = require 'console'
+	local mover = require 'mover'
+	local item  = require 'item'
+	local Log   = require 'logus'
+	local Unit  = require 'unit'
+	local Item  = require 'item'
 	
+	setTestItem(Unit.hero, Item)
 	
-	 -- while true do
-		-- local i = console.getCh()
-		-- print('i = ', i)
-		
-	 -- end
-	-- print('map', map)
+	local i = 0
+	 while i ~= 32 do
+		i = console.getCh()
+		local dir = Dir.direction[i]
+		if dir == 'i' then
+			console.changeRejim('bag')
+		elseif dir == 'm' then
+			console.changeRejim('map')
+		else
+			mover.setDir(dir)
+		end
+		console.update()
+	 end
 	
-	
-	
-	
-	
-	
-	-- print("print after")	
+	print("print after")	
  
  end))

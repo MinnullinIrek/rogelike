@@ -34,7 +34,8 @@ function putTestMessages()
 	
 end
 
-putTestMessages()
+-- putTestMessages()
+
 
 
 return M

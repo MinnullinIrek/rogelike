@@ -1,5 +1,8 @@
 local M = {}
 
+local Mover 	= require 'mover'
+local Inventory = require 'inventory'
+local Item 		= require 'item'
 
 
 local rockSymb = '#'
@@ -11,11 +14,14 @@ local Unit =
 	ch 		  = '0',
 	utype 	  = '0',
 	
+	
 	chars = {
 		hp     = {name = 'hp    ',100, 100},
 		cot    = {name = 'cot   ',100, 100},
 		energy = {name = 'energy',100, 100},	
 	}
+	-- mover
+	-- inventory
 }
 
 Unit.__index = Unit
@@ -33,6 +39,15 @@ function M.createHero()
 	
 end
 
-M.hero = M.createHero()
+
+
+M.hero 				 	= M.createHero()
+Mover.heroMover.unit 	= M.hero
+M.hero.mover			= Mover.heroMover
+M.hero.inventory 		= Inventory.heroInventory
+Inventory.heroInventory = M.hero
+
+
+
 
 return M

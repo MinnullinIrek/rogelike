@@ -18,7 +18,14 @@ local map = {
 	setUnit = function(self,  row, column, unit)
 		local cell = self:getCell(row, column)
 		cell:setUnit(unit)
+		if unit then
+			unit.mover.coords.x = row
+			unit.mover.coords.y = column
+			unit.mover.map = self
+		end
 	end
+	
+	
 }
 
 map.__index = map
@@ -35,6 +42,8 @@ end
 M.map = M.createMap('first', 100, 100 )
 
 local u = Unit.createRock()
+
+assert(Unit.hero, "Unit.hero is nil")
 
 M.map:setUnit(4, 4, Unit.hero)
 
