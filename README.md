@@ -1,2 +1,2 @@
 # rogelike
-rogelike C++ Qt Lua opengl
+rogelike C++ Qt Lua
