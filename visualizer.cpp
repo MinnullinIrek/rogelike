@@ -14,7 +14,7 @@ Visualizer::Visualizer(QObject *parent) : QObject(parent)
         //connect(this, &Visualizer::toPut, this, &Visualizer::putchar);
 
 }
-
+static LPDWORD logD2 = new DWORD;
 
 void Visualizer::changeBuffer()
 {
@@ -26,6 +26,12 @@ void Visualizer::changeBuffer()
 
     firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    for(int i = 0; i < 101; i++)
+    {
+        COORD cd = {0, i};
+        static char text[] = "                                                                                                    \0";
+        WriteConsoleOutputCharacterA(*handle, text, strlen(text), cd, logD2);
+    }
 }
 
 
@@ -33,7 +39,7 @@ void Visualizer::setActiveBuffer(HANDLE h)
 {
     SetConsoleActiveScreenBuffer(h);
 }
-static LPDWORD logD2 = new DWORD;
+
 
 
 
