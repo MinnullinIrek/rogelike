@@ -12,9 +12,10 @@ local Inventory = {
 		assert(item, 'item is nil')
 		table.insert(self.bag, item)
 	end,
-	
-	
 }
+
+
+
 
 Inventory.__index = Inventory
 

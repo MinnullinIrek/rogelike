@@ -52,7 +52,7 @@ print("color = ", color);
 -- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
 
 function setTestItem(unit, Item)
-	for i = 1, 10 do
+	for i = 1, 100 do
 		local item = Item.createItem('item 1', i)
 		unit.inventory:putItem(item)
 		
@@ -83,9 +83,9 @@ print(pcall(function()
 		elseif dir == 'm' then
 			console.changeRejim('map')
 		else
-			mover.setDir(dir)
+			console.Activer:dirHandle(dir)
 		end
-		console.update()
+		console.Activer:update()
 	 end
 	
 	print("print after")	

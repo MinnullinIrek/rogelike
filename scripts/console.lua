@@ -3,6 +3,7 @@ local map  = require 'map'
 local Unit = require 'unit'
 local Text = require 'text'
 local Log  = require 'logus'
+local Mover = require 'mover'
 
 function traceTable(t)
 	for i, k in ipairs(t) do 
@@ -172,20 +173,24 @@ end
 
 oprint = print
 
-function showTable(tbl, fstr, constTbl)
-	Log.putMessage("showTable  ")
-	for i, item in ipairs(tbl) do
-		Log.putMessage("showTable  "..i)
-		local str = fstr(item)
-			Log.putMessage("showTable  " .. str)
-		putCh(str, constTbl.x+1, constTbl.y+i)
+function showTable(tbl, fstr, constTbl, start)
+	if start <= #tbl then
+	local j = 1
+		for i = start, #tbl do
+			local str = fstr(tbl[i])
+			putCh(str, constTbl.x+1, constTbl.y+j)
+			
+			if j > constTbl.height - 1 then
+				break;
+			end
+			j = j+1
+		end
 	end
 end
 
-function showBag()
-	
+function showBag(start)
 	drawTable(consts.inventoryTbl)
-	showTable(Unit.hero.inventory.bag, function(item) return string.format("%s  %s", item.ch, item.name) end, consts.inventoryTbl)
+	showTable(Unit.hero.inventory.bag, function(item) return string.format("%s  %s", item.ch, item.name) end, consts.inventoryTbl, start )
 	printText(Log, 'logTbl')
 	conLib.changeBuffer();
 end
@@ -197,16 +202,48 @@ local bag = nil
 function M.changeRejim(i)
 	
 	if     i == 'map' then
-		
-		M.update = update
+		M.Activer = mapDirection
 	elseif i == 'bag' then
-		Log.putMessage("changeRejim "..i)
-		-- Log.putMessage("changeRejim bag")
-		M.update = showBag
+		M.Activer = inventoryDirection
 	end
 end
 
-M.update = update
+
+
+mapDirection = 
+{
+	update = function(self)
+		printTables()
+		printMap(map.map);
+		printHero()
+		printText(Text, 'textTbl')
+		printText(Log, 'logTbl')
+
+		conLib.changeBuffer();
+	end,
+	
+	dirHandle = function(self, dir)
+		Mover.setDir(dir)
+	end
+}
+
+inventoryDirection = 
+{
+	start = 1,
+	update = function(self)
+		showBag(self.start)
+	end,
+	
+	dirHandle = function(self, dir)
+		if dir == 'up' and self.start > 1 then
+			self.start = self.start - 1
+		elseif dir == 'down' then
+			self.start = self.start + 1
+		end
+	end
+}
+
+M.Activer = mapDirection
 
 
 return M
