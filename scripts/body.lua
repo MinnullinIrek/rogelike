@@ -3,7 +3,10 @@ local tnil = {}
 
 local Item = require "item"
 
-local wearing = {--[[light, middle, heavy, weapon]]}
+local wearing = {--[[light, middle, heavy, weapon]]
+
+	__tostring = function(self) return 'wearing' end
+}
 
 function createWearing()
 	return setmetatable({}, wearing)
@@ -22,6 +25,10 @@ leg			= {__type = 'leg',		item = createWearing()},
 foot		= {__type = 'foot', 	item = createWearing()},
 }
 
+for nm, k in pairs(bodyTypes) do
+	k.__index = bodyTypes[nm]
+end
+
 function createBodyPart(name)
 	assert(bodyTypes[name], string.format("no bodyType %s", name) )
 	return setmetatable({}, bodyTypes[name])
@@ -34,7 +41,8 @@ local metaBody = {
 	wear = function(self, item)
 		for bPart, k in pairs(item.bodyPartTypes) do
 		    if self[bPart] then
-				for itemType, j in pairs() do
+				for itemType, j in pairs(self[bPart]) do
+					print(itemType)
 					local it = self[bPart][itemType]
 					self:unWear(it)
 					self[bPart][itemType] = item
@@ -53,6 +61,7 @@ local metaBody = {
 	end,
 	
 }
+metaBody.__index = metaBody
 
 function M.createBody()
 

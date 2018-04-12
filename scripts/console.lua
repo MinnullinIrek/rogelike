@@ -5,21 +5,23 @@ local Text = require 'text'
 local Log  = require 'logus'
 local Mover = require 'mover'
 
-function traceTable(t)
-	for i, k in ipairs(t) do 
+function traceTable(t, fpairs)
+	fpairs = fpairs or ipairs
+	for i, k in fpairs(t) do 
 		print(k)
 	end
 end
 
 local M = {}
 local consts = {
-	mapTbl  = {x = 1, y =1, height = 50, width = 50},
-	charTbl = {x = 51, y =1, height = 50, width = 30},
-	textTbl = {x = 1, y =51, height = 20, width = 40},
-	logTbl  = {x = 51, y = 51, height = 20, width = 40 },
-	consoleSize = {x = 100, y = 100},
+	mapTbl  	 = {x = 1,   y =1,   height = 50, width = 50},
+	charTbl 	 = {x = 51,  y =1,   height = 50, width = 30},
+	textTbl 	 = {x = 1,   y =51,  height = 20, width = 40},
+	logTbl  	 = {x = 51,  y = 51, height = 20, width = 40 },
+	consoleSize  = {x = 100, y = 100},
 	
-	inventoryTbl = {x = 2, y = 2, height = 50, width = 50}
+	inventoryTbl = {x = 2,   y = 2,  height = 50, width = 50},
+	bodyTbl 	 = { x = 52, y = 2,  height = 50, width = 40},
 	
 	
 
@@ -173,26 +175,52 @@ end
 
 oprint = print
 
-function showTable(tbl, fstr, constTbl, start)
-	if start <= #tbl then
-	local j = 1
+local function showTable(tbl, fstr, constTbl, pos)
+	local height = constTbl.height
+	local start = height - pos < 0 and pos - height + 1 or 1
+	if pos <= #tbl then
+		local j = 1
 		for i = start, #tbl do
-			local str = fstr(tbl[i])
+			local str = fstr(tbl[i], i == pos)
 			putCh(str, constTbl.x+1, constTbl.y+j)
 			
 			if j > constTbl.height - 1 then
 				break;
 			end
-			j = j+1
+			j = j + 1
 		end
 	end
 end
 
-function showBag(start)
+local function showBody()
+	for i, tbl in ipairs(Unit.hero.body) do
+		local nm, bpart = next(tbl)
+		local __type = bpart.__type
+		local wearing = bpart.item
+		
+		print("type "..__type)
+
+
+		local str = nm
+		if wearing then
+			for tp, it in pairs(wearing) do
+				str = str .." "..it.name
+			end
+		end
+		
+		putCh(str, consts.bodyTbl.x+3, consts.bodyTbl.y + i)
+	end
+end
+
+function showBag(pos)
+	local selectedItem = nil
 	drawTable(consts.inventoryTbl)
-	showTable(Unit.hero.inventory.bag, function(item) return string.format("%s  %s", item.ch, item.name) end, consts.inventoryTbl, start )
+	drawTable(consts.bodyTbl)
+	showTable(Unit.hero.inventory.bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
+	showBody()
 	printText(Log, 'logTbl')
 	conLib.changeBuffer();
+	return selectedItem
 end
 
 
@@ -200,10 +228,10 @@ update()
 
 local bag = nil
 function M.changeRejim(i)
-	
-	if     i == 'map' then
+	if     i == 'map' then		
 		M.Activer = mapDirection
 	elseif i == 'bag' then
+		print('rejim bag')
 		M.Activer = inventoryDirection
 	end
 end
@@ -231,7 +259,7 @@ inventoryDirection =
 {
 	start = 1,
 	update = function(self)
-		showBag(self.start)
+		self.selectedItem = showBag(self.start)
 	end,
 	
 	dirHandle = function(self, dir)
@@ -239,6 +267,8 @@ inventoryDirection =
 			self.start = self.start - 1
 		elseif dir == 'down' then
 			self.start = self.start + 1
+		elseif dir == 'enter' then
+			Unit.hero.body:wear(self.selectedItem)
 		end
 	end
 }

@@ -8,12 +8,16 @@ local Item = {
 }
 Item.__index = Item
 
-function M.createItem(name, ch)
-	return setmetatable({name = name, ch = ch or '$'}, Item)	
-end
+
 
 
 ----------------------------------------------------------------------
+
+local item = {
+	__type = item
+}
+
+item.__index = item
 
 local armour = {
 	__type = 'armour',
@@ -23,6 +27,7 @@ local armour = {
 	
 }
 
+armour.__index = armour
 local weapon = {
 	__type = 'weapon',
 	itemTypes = {--[[twoHanded, oneHanded,]]},
@@ -30,7 +35,15 @@ local weapon = {
 	bodyPartTypes = {--[[ leftHand, leftArm  ]]},
 }
 
+weapon.__index = weapon
 
+local itemMTypes = {armour = armour, weapon = weapon, item = item}
+
+function M.createItem(name, ch, __type, itemTypes, bodyPartTypes)
+	local item = {name = name, ch = ch or '$', itemTypes = itemTypes, bodyPartTypes = bodyPartTypes}
+
+	return setmetatable(item, itemMTypes[__type])
+end
 
 
 

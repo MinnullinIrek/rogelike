@@ -54,9 +54,12 @@ print("color = ", color);
 function setTestItem(unit, Item)
 	for i = 1, 100 do
 		local item = Item.createItem('item 1', i)
+		
 		unit.inventory:putItem(item)
 		
 	end
+	local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true})
+	unit.inventory:putItem(item)
 end
 
 
