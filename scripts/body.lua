@@ -1,6 +1,6 @@
 local M = {}
 local tnil = {}
-
+local Log = require 'logus'
 local Item = require "item"
 
 local wearing = {--[[light, middle, heavy, weapon]]
@@ -39,7 +39,9 @@ end
 local metaBody = {
 	
 	wear = function(self, item)
+		Log.putMessage('wear')
 		for bPart, k in pairs(item.bodyPartTypes) do
+			
 		    if self[bPart] then
 				for itemType, j in pairs(self[bPart]) do
 					print(itemType)

@@ -52,12 +52,12 @@ print("color = ", color);
 -- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
 
 function setTestItem(unit, Item)
-	for i = 1, 100 do
-		local item = Item.createItem('item 1', i)
+	-- for i = 1, 100 do
+		-- local item = Item.createItem('item 1', i)
 		
-		unit.inventory:putItem(item)
+		-- unit.inventory:putItem(item)
 		
-	end
+	-- end
 	local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true})
 	unit.inventory:putItem(item)
 end

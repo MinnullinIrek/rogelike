@@ -268,6 +268,7 @@ inventoryDirection =
 		elseif dir == 'down' then
 			self.start = self.start + 1
 		elseif dir == 'enter' then
+			Log.putMessage('enter')
 			Unit.hero.body:wear(self.selectedItem)
 		end
 	end
