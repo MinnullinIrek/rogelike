@@ -1,53 +1,95 @@
 local M = {}
+
+local dname = "body: "
+
+local function print(...) oprint(dname, ...) end
+
 local tnil = {}
 local Log = require 'logus'
 local Item = require "item"
 
 local wearing = {--[[light, middle, heavy, weapon]]
-
-	__tostring = function(self) return 'wearing' end
+	__type 		= 'wearing',
+	__tostring  = toStr,
 }
+
+wearing.__index = wearing
 
 function createWearing()
-	return setmetatable({}, wearing)
+	return setmetatable({id = nextSerial()}, wearing)
 end
+
+
+
+local BodyType = {__type = 'BodyType', __tostring = toStr}
+BodyType.__index = BodyType
+-- print('rawget (self, __tostring)'..tostring(BodyType.__tostring))--rawget (BodyType, __tostring))
+
+
+
+local head 		= {__type = 'head',			item = createWearing(), __tostring    = toStr}
+local neck 		= {__type = 'neck',			item = createWearing(), __tostring    = toStr} 
+local shoulder 	= {__type = 'shoulder',		item = createWearing(), __tostring    = toStr} 
+local arm		= {__type = 'arm',			item = createWearing(), __tostring    = toStr} 
+local hand		= {__type = 'hand',			item = createWearing(), __tostring    = toStr} 
+local brest		= {__type = 'brest',		item = createWearing(), __tostring    = toStr} 
+local belt		= {__type = 'belt',			item = createWearing(), __tostring    = toStr} 
+local hip		= {__type = 'hip',			item = createWearing(), __tostring    = toStr} 
+local leg		= {__type = 'leg',			item = createWearing(), __tostring    = toStr} 
+local foot		= {__type = 'foot', 		item = createWearing(), __tostring    = toStr} 
+
+
+head.__index 		= head
+neck.__index 		= neck
+shoulder.__index 	= shoulder
+arm.__index			= arm
+hand.__index		= hand
+brest.__index		= brest
+belt.__index		= belt
+hip.__index			= hip
+leg.__index			= leg
+foot.__index		= foot
 
 local bodyTypes = {
-head 		= {__type = 'head',		item = createWearing()},
-neck 		= {__type = 'neck',		item = createWearing()},
-shoulder 	= {__type = 'shoulder',	item = createWearing()},
-arm			= {__type = 'arm',		item = createWearing()},
-hand		= {__type = 'hand',		item = createWearing()},
-brest		= {__type = 'brest',	item = createWearing()},
-belt		= {__type = 'belt',		item = createWearing()},
-hip			= {__type = 'hip',		item = createWearing()},
-leg			= {__type = 'leg',		item = createWearing()},
-foot		= {__type = 'foot', 	item = createWearing()},
+	head 		= head,
+	neck 		= neck,
+	shoulder 	= shoulder,
+	arm			= arm,
+	hand		= hand,
+	brest		= brest,
+	belt		= belt,
+	hip			= hip,
+	leg			= leg,
+	foot		= foot,
 }
 
-for nm, k in pairs(bodyTypes) do
-	k.__index = bodyTypes[nm]
-end
 
 function createBodyPart(name)
 	assert(bodyTypes[name], string.format("no bodyType %s", name) )
-	return setmetatable({}, bodyTypes[name])
 	
+	local t = setmetatable({__type = name, item = createWearing(), id = nextSerial()}, bodyTypes[name])
+	-- print('t=', t)
+	
+	return t
 end
 
 
 local metaBody = {
-	
+	__type = 'body',
 	wear = function(self, item)
-		Log.putMessage('wear')
-		for bPart, k in pairs(item.bodyPartTypes) do
-			
+		
+		for bPart, k_true in pairs(item.bodyPartTypes) do
+			print('body wear', bPart, k_true)
 		    if self[bPart] then
-				for itemType, j in pairs(self[bPart]) do
-					print(itemType)
-					local it = self[bPart][itemType]
+				print('self[',bPart,']^^^^=', self[bPart][bPart])
+				for itemType, j_true in pairs(item.itemTypes) do
+					
+					local it = (self[bPart][bPart]['item'] or tnil)[itemType]
 					self:unWear(it)
-					self[bPart][itemType] = item
+					self[bPart][bPart]['item'][itemType] = item
+					Log.putMessage('wear'..bPart..itemType)
+					
+					
 				end
 			end
 		end
@@ -63,12 +105,15 @@ local metaBody = {
 	end,
 	
 }
-metaBody.__index = metaBody
+metaBody.__index 	= metaBody
+metaBody.__tostring = toStr
 
 function M.createBody()
 
 	local body = setmetatable(
 	{
+		id = nextSerial(),
+
 		[1]  = {head 			= createBodyPart('head'),		},
 		[2]  = {neck 			= createBodyPart('neck'),		},
 		[3]  = {leftShoulder 	= createBodyPart('shoulder'),	},
@@ -104,6 +149,7 @@ function M.createBody()
 	body.rightLeg 				= body[14]
 	body.leftFoot 				= body[15]
 	body.rightFoot 				= body[16]
+	
 	return body
 end
 

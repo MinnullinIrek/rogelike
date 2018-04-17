@@ -1,6 +1,9 @@
 package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
 
 
+local dname = "script: "
+
+
 
 -- struct VisObject
 -- {
@@ -15,17 +18,17 @@ package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
 
 
 -- local map = m.map
-print = function(...)
-	local str = ''
-	for i, v in ipairs(table.pack(...)) do
-		str=str..' '..tostring(v)
-	end
-	glLib.print(str)
-end
+-- print = function(...)
+	-- local str = ''
+	-- for i, v in ipairs(table.pack(...)) do
+		-- str=str..' '..tostring(v)
+	-- end
+	-- glLib.print(str)
+-- end
 
 
 
- -- print(glLib)
+
  -- print(opengl)
 
  
@@ -64,16 +67,21 @@ end
 
 
 print(pcall(function()
+	require 'utils'
+	local function print(...) oprint(dname, ...) end
+
 	
-	print("print before")
-	local Dir = require 'direction'
-	local map = require 'map'
+	
+	print("print before", tname)
+	local Dir     = require 'direction'
+	local map     = require 'map'
 	local console = require 'console'
-	local mover = require 'mover'
-	local item  = require 'item'
-	local Log   = require 'logus'
-	local Unit  = require 'unit'
-	local Item  = require 'item'
+	
+	local mover   = require 'mover'
+	local item    = require 'item'
+	local Log     = require 'logus'
+	local Unit    = require 'unit'
+	local Item    = require 'item'
 	
 	setTestItem(Unit.hero, Item)
 	
@@ -82,6 +90,7 @@ print(pcall(function()
 		i = console.getCh()
 		local dir = Dir.direction[i]
 		if dir == 'i' then
+			-- Log.putMessage("pressed i")
 			console.changeRejim('bag')
 		elseif dir == 'm' then
 			console.changeRejim('map')

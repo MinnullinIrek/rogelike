@@ -1,5 +1,10 @@
 local M = {}
 
+local dname = "item: "
+
+local function print(...) oprint(dname, ...) end
+
+
 local Item = {
 	__type = 'item',
 	name = '',
@@ -40,7 +45,7 @@ weapon.__index = weapon
 local itemMTypes = {armour = armour, weapon = weapon, item = item}
 
 function M.createItem(name, ch, __type, itemTypes, bodyPartTypes)
-	local item = {name = name, ch = ch or '$', itemTypes = itemTypes, bodyPartTypes = bodyPartTypes}
+	local item = {name = name, ch = ch or '$', itemTypes = itemTypes, bodyPartTypes = bodyPartTypes, id = nextSerial()}
 
 	return setmetatable(item, itemMTypes[__type])
 end

@@ -1,5 +1,9 @@
 local M = {}
 
+local dname = "inventory: "
+
+local function print(...) oprint(dname, ...) end
+
 local item = require 'item'
 
 local Inventory = {

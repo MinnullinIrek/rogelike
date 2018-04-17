@@ -1,5 +1,10 @@
 local M = {}
 
+local dname = "mover: "
+
+local function print(...) oprint(dname, ...) end
+
+
 local Mover = 
 {
 	coords = {x, y},

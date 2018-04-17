@@ -1,4 +1,7 @@
 local M = {}
+local dname = "unit: "
+
+local function print(...) oprint(dname, ...) end
 
 local Mover 	= require 'mover'
 local Inventory = require 'inventory'

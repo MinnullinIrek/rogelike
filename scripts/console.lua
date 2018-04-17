@@ -1,4 +1,9 @@
 
+local dname = "console: "
+
+local function print(...) oprint(dname, ...) end
+
+
 local map  = require 'map'
 local Unit = require 'unit'
 local Text = require 'text'
@@ -173,7 +178,7 @@ end
 
 
 
-oprint = print
+
 
 local function showTable(tbl, fstr, constTbl, pos)
 	local height = constTbl.height
@@ -204,7 +209,10 @@ local function showBody()
 		local str = nm
 		if wearing then
 			for tp, it in pairs(wearing) do
-				str = str .." "..it.name
+				print("tp, it", tp, it)
+				if type(it) == 'table' then
+					str = str .." "..it.name
+				end
 			end
 		end
 		
@@ -259,6 +267,7 @@ inventoryDirection =
 {
 	start = 1,
 	update = function(self)
+		-- Log.putMessage("iiiiiiiiiiiiiiiiiiii")
 		self.selectedItem = showBag(self.start)
 	end,
 	

@@ -2,6 +2,11 @@ local M = {}
 local cell = require 'cell'
 local Unit = require 'unit'
 
+local dname = "map: "
+
+local function print(...) oprint(dname, ...) end
+
+
 
 print("map")
 local map = {
