@@ -54,22 +54,27 @@ print("color = ", color);
 
 -- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
 
-function setTestItem(unit, Item)
-	-- for i = 1, 100 do
-		-- local item = Item.createItem('item 1', i)
-		
-		-- unit.inventory:putItem(item)
-		
-	-- end
-	local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true})
-	unit.inventory:putItem(item)
-end
+
 
 
 print(pcall(function()
 	require 'utils'
 	local function print(...) oprint(dname, ...) end
+	
+	local Char = require 'chars'
+	
+	
+	function setTestItem(unit, Item)
+		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar'))
+		unit.inventory:putItem(item)
+		unit.body:wear(item)
+		
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
+		unit.inventory:putItem(item)
+		unit.body:wear(item)
 
+
+	end
 	
 	
 	print("print before", tname)

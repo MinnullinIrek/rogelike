@@ -1,4 +1,5 @@
 local M = {}
+
 local dname = "unit: "
 
 local function print(...) oprint(dname, ...) end
@@ -7,6 +8,7 @@ local Mover 	= require 'mover'
 local Inventory = require 'inventory'
 local Item 		= require 'item'
 local Body 		= require 'body'
+local Chars 	= require 'chars'
 
 
 local rockSymb = '#'
@@ -18,12 +20,13 @@ local Unit =
 	ch 		  = '0',
 	utype 	  = '0',
 	
+	chars = Chars.createChar('mainChar')
 	
-	chars = {
-		hp     = {name = 'hp    ',100, 100},
-		cot    = {name = 'cot   ',100, 100},
-		energy = {name = 'energy',100, 100},	
-	}
+	-- chars = {
+		-- hp     = {name = 'hp    ',100, 100},
+		-- cot    = {name = 'cot   ',100, 100},
+		-- energy = {name = 'energy',100, 100},	
+	-- }
 	-- mover
 	-- inventory
 }

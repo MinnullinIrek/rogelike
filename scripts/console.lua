@@ -127,10 +127,20 @@ function printHero()
 	local count = 0
 	for i, k in pairs(chars) do
 		count = count + 1;
-		local charText = string.format('%s \t %d/%d', k.name, k[1], k[2])
+		local charText = string.format('%s \t %d/%d', k.name, k.maxValue, k.value)
 		
 		putCh(charText, consts.charTbl.x +5, consts.charTbl.y + count, color.DarkGray, color.Blue)  --coordX, coordY,
 	end
+	
+	local body = Unit.hero.body
+	
+	for i, nmbpart in ipairs(body) do
+		count = count + 1
+		local name, bpart = next(nmbpart)
+		name = string.format('%s  %d', name, ((bpart.chars or tnil)['armour'] or tnil)['value'] or 0)
+		putCh(name, consts.charTbl.x +5, consts.charTbl.y + count)
+	end
+	
 end
 
 function printText(tbl, key)

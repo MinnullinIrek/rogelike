@@ -1,6 +1,7 @@
 
 local serial = 0
 local tname = 'utils'
+tnil = {}
 
 function nextSerial()
 	serial = serial + 1;
