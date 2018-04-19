@@ -64,17 +64,7 @@ print(pcall(function()
 	local Char = require 'chars'
 	
 	
-	function setTestItem(unit, Item)
-		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar'))
-		unit.inventory:putItem(item)
-		unit.body:wear(item)
-		
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
-		unit.inventory:putItem(item)
-		unit.body:wear(item)
-
-
-	end
+	
 	
 	
 	print("print before", tname)
@@ -88,17 +78,34 @@ print(pcall(function()
 	local Unit    = require 'unit'
 	local Item    = require 'item'
 	
+	function setTestItem(unit, Item)
+		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar'))
+		unit.inventory:putItem(item)
+		unit.body:wear(item)
+		
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
+		unit.inventory:putItem(item)
+		unit.body:wear(item)
+
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
+		
+		local cell = map.map:getCell(5,5)
+		
+		cell:putItem(item)
+		
+	end
+	
 	setTestItem(Unit.hero, Item)
 	
 	local i = 0
 	 while i ~= 32 do
 		i = console.getCh()
 		local dir = Dir.direction[i]
-		if dir == 'i' then
+		if dir == 'i' or dir == 'p' then
 			-- Log.putMessage("pressed i")
-			console.changeRejim('bag')
+			console.changeRejim('bag', dir)
 		elseif dir == 'm' then
-			console.changeRejim('map')
+			console.changeRejim('map', dir)
 		else
 			console.Activer:dirHandle(dir)
 		end

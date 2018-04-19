@@ -3,7 +3,7 @@ local dname = "console: "
 
 local function print(...) oprint(dname, ...) end
 
-
+require 'utils'
 local map  = require 'map'
 local Unit = require 'unit'
 local Text = require 'text'
@@ -34,25 +34,7 @@ local consts = {
 
 
 
-local color = 
-{
-    Black = 0,
-    Blue = 1,
-    Green = 2,
-    Cyan = 3,
-    Red = 4,
-    Magenta = 5,
-    Brown = 6,
-    LightGray = 7,
-    DarkGray = 8,
-    LightBlue = 9,
-    LightGreen = 10,
-    LightCyan = 11,
-    LightRed = 12,
-    LightMagenta = 13,
-    Yellow = 14,
-    White = 15
-};
+
 
 local coord = {
 x = 0,
@@ -65,6 +47,10 @@ local function putCh(text, coordX, coordY, colorBg, colorFg)
 	colorBg = colorBg or color.Black;
 	colorFg = colorFg or color.White;
 	conLib.putCh(text, coordX, coordY, colorBg, colorFg);
+end
+
+local function putTbl(tbl, coordX, coordY)
+	putCh(tbl.text, coordX, coordY, tbl.colorBg, tbl.colorFg);
 end
 
 putCh("хввапп", 1, 1, color.Yellow, color.DarkGray)
@@ -103,7 +89,7 @@ printTables()
 
 function printCell(cell, x, y)
 	local ch = cell:getChar()
-	putCh(ch, x, y)
+	putTbl(ch, x, y)
 	
 end
 
@@ -207,6 +193,7 @@ print('map.map.getCell', map.map.getCell)
 
 
 local function showTable(tbl, fstr, constTbl, pos)
+	assert(tbl, 'bag is nil')
 	local height = constTbl.height
 	local start = height - pos < 0 and pos - height + 1 or 1
 	if pos <= #tbl then
@@ -242,11 +229,12 @@ local function showBody()
 end
 
 
-function showBag(pos)
+function showBag(pos,bag)
+	assert(bag, 'bag is nil')
 	local selectedItem = nil
 	drawTable(consts.inventoryTbl)
 	drawTable(consts.bodyTbl)
-	showTable(Unit.hero.inventory.bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
+	showTable(bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
 	showBody()
 	printText(Log, 'logTbl')
 	conLib.changeBuffer();
@@ -257,19 +245,36 @@ end
 
 
 local bag = nil
-function M.changeRejim(i)
-	if     i == 'map' then		
+function M.changeRejim(i, dir)
+	if     i == 'map' then
 		M.Activer = mapDirection
 	elseif i == 'bag' then
 		print('rejim bag')
+		assert(dir, 'dir is nil')
+		inventoryDirection.dir = dir
+		inventoryDirection.start = 1
 		M.Activer = inventoryDirection
+		
 	end
 end
 
+function showCellItems(pos)
+	local selectedItem = nil
+	drawTable(consts.inventoryTbl)
+	drawTable(consts.bodyTbl)
+	local x, y = Unit.hero.mover.coords.x, Unit.hero.mover.coords.y
+	local bag = map.map:getCell(x, y).bag or tnil
+	showTable(bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
+	showBody()
+	printText(Log, 'logTbl')
+	conLib.changeBuffer();
+	return selectedItem
+end
 
 
 mapDirection = 
 {
+	start = 1,
 	update = function(self)
 		printTables()
 		printMap(map.map);
@@ -281,7 +286,11 @@ mapDirection =
 	end,
 	
 	dirHandle = function(self, dir)
-		Mover.setDir(dir)
+		if dir == 'p' then
+			showCellItems(self.start)
+		else
+			Mover.setDir(dir)
+		end
 	end
 }
 
@@ -289,9 +298,33 @@ mapDirection.update()
 inventoryDirection = 
 {
 	start = 1,
+	dir = 'i',
+	
+	getCellBag = function()
+		local x, y = Unit.hero.mover.coords.x, Unit.hero.mover.coords.y
+		if not map.map:getCell(x, y).bag then
+			map.map:getCell(x, y).bag = {}
+		end
+		return map.map:getCell(x, y).bag
+	end,
+	
+	getHeroBag = function()
+		return Unit.hero.inventory.bag
+	end,
+	
 	update = function(self)
 		-- Log.putMessage("iiiiiiiiiiiiiiiiiiii")
-		self.selectedItem = showBag(self.start)
+		local bag = nil
+		assert(self.dir, 'dir is nil')
+		
+		print(self.dir, 'setDir*****************')
+		if self.dir == 'i' then
+			bag = self:getHeroBag()
+		elseif self.dir == 'p' then
+			bag = self:getCellBag()
+		end
+		assert(bag, 'bag is nil')
+		self.selectedItem = showBag(self.start, bag)
 	end,
 	
 	dirHandle = function(self, dir)
@@ -301,7 +334,13 @@ inventoryDirection =
 			self.start = self.start + 1
 		elseif dir == 'enter' then
 			Log.putMessage('enter')
-			Unit.hero.body:wear(self.selectedItem)
+			if self.dir == 'i' then
+				Unit.hero.body:wear(self.selectedItem)
+			elseif self.dir == 'p' then
+				local bag = self:getCellBag()
+				local item = table.remove(bag,start)
+				table.insert(self:getHeroBag(), item)
+			end
 		end
 	end
 }

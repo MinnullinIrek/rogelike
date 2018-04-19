@@ -5,6 +5,7 @@ local function print(...) oprint(dname, ...) end
 
 
 
+
 local Cell = 
 {
 	-- Unit
@@ -14,7 +15,32 @@ local Cell =
 	end,
 	
 	getChar = function(self)
-		return (self.unit or {}).ch or '.'
+		if     self.unit then
+			        return {text = self.unit.ch, colorFg = color.LightBlue}
+		elseif self.bag then
+					return {text = '$', colorFg = color.Yellow}
+		end
+		return {text = '.'}
+	end,
+	
+	putItem = function(self, item)
+		self.bag = self.bag or {}
+		table.insert(self.bag, item)
+	end,
+	
+	putBag = function(self, bag)
+		if self.bag == nil then
+			self.bag = bag
+		else
+			for i, item in ipairs(bag) do
+				table.insert(self.bag, item)
+			end
+			
+			while table[0] ~= nil do
+				table.remove(0)
+			end
+		end
+		
 	end,
 }
 Cell.__index = Cell
