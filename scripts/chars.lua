@@ -25,7 +25,7 @@ local Char = {
 Char.__index = Char
 
 function createChar(name, maxValue, value)
-	return setmetatable({name = name, maxValue = maxValue, value = value}, Char)
+	return setmetatable({name = name, maxValue = maxValue, value = value, id = nextSerial()}, Char)
 end
 
 
@@ -52,7 +52,7 @@ local charsInChar = { mainChar = {'hp', 'cot', 'energy'}, itemChar = {'armour'} 
 
 function M.createChar(name)
 	assert(chars[name], string.format('no charType %s',name))
-	local creatingChar = {}
+	local creatingChar = {id = nextSerial()}
 	for i, ch in ipairs(charsInChar[name]) do
 		creatingChar[ch] = createChar(ch, 100, 100)
 	end	

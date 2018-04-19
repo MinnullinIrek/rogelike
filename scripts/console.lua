@@ -116,6 +116,19 @@ function printMap(mp)
 	end
 end
 
+local function cicleBody(body, func)
+	for i, tbl in ipairs(Unit.hero.body) do
+		local nm, bpart = next(tbl)
+		local __type = bpart.__type
+		local wearing = bpart.item
+		
+		print("type "..__type)
+		func(wearing,nm, i)
+	end
+end
+
+
+
 function printHero()
 	-- chars = {
 		-- hp     = {100, 100},
@@ -127,19 +140,31 @@ function printHero()
 	local count = 0
 	for i, k in pairs(chars) do
 		count = count + 1;
-		local charText = string.format('%s \t %d/%d', k.name, k.maxValue, k.value)
-		
-		putCh(charText, consts.charTbl.x +5, consts.charTbl.y + count, color.DarkGray, color.Blue)  --coordX, coordY,
+		if(type(k) == 'table') then
+			local charText = string.format('%s \t %d/%d', k.name, k.maxValue, k.value)
+			
+			putCh(charText, consts.charTbl.x +5, consts.charTbl.y + count, color.DarkGray, color.Blue)  --coordX, coordY,
+		end
 	end
 	
 	local body = Unit.hero.body
 	
-	for i, nmbpart in ipairs(body) do
-		count = count + 1
-		local name, bpart = next(nmbpart)
-		name = string.format('%s  %d', name, ((bpart.chars or tnil)['armour'] or tnil)['value'] or 0)
-		putCh(name, consts.charTbl.x +5, consts.charTbl.y + count)
-	end
+	cicleBody(Unit.hero.body,  
+		function(wearing, str, i)
+			if wearing then
+				for tp, it in pairs(wearing) do
+					if type(it) == 'table' then
+						str = str .." "..it.chars.armour.value
+					end
+				end
+			end
+			putCh(str, consts.bodyTbl.x+3, consts.bodyTbl.y + i + count)
+			
+		end
+	)
+
+	
+	
 	
 end
 
@@ -176,15 +201,6 @@ end
 
 print('map.map', map.map)
 print('map.map.getCell', map.map.getCell)
-function update()
-	printTables()
-	printMap(map.map);
-	printHero()
-	printText(Text, 'textTbl')
-	printText(Log, 'logTbl')
-
-	conLib.changeBuffer();
-end
 
 
 
@@ -207,28 +223,24 @@ local function showTable(tbl, fstr, constTbl, pos)
 	end
 end
 
-local function showBody()
-	for i, tbl in ipairs(Unit.hero.body) do
-		local nm, bpart = next(tbl)
-		local __type = bpart.__type
-		local wearing = bpart.item
-		
-		print("type "..__type)
 
 
-		local str = nm
-		if wearing then
-			for tp, it in pairs(wearing) do
-				print("tp, it", tp, it)
-				if type(it) == 'table' then
-					str = str .." "..it.name
-				end
+local function showBodyItemIterator(wearing, str, i)
+	if wearing then
+		for tp, it in pairs(wearing) do
+			if type(it) == 'table' then
+				str = str .." "..it.name
 			end
 		end
-		
-		putCh(str, consts.bodyTbl.x+3, consts.bodyTbl.y + i)
 	end
+	putCh(str, consts.bodyTbl.x+3, consts.bodyTbl.y + i)
+	
 end
+
+local function showBody()
+	cicleBody(Unit.hero.body, showBodyItemIterator)
+end
+
 
 function showBag(pos)
 	local selectedItem = nil
@@ -242,7 +254,7 @@ function showBag(pos)
 end
 
 
-update()
+
 
 local bag = nil
 function M.changeRejim(i)
@@ -273,6 +285,7 @@ mapDirection =
 	end
 }
 
+mapDirection.update()
 inventoryDirection = 
 {
 	start = 1,

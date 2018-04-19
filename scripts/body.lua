@@ -29,11 +29,10 @@ BodyType.__index = BodyType
 local bodyPart = {
 	__type = 'bodyPart',
 	__tostring = toStr,
+	-- items = {}
 	
 	wear = function(self, item)
 		assert(item.chars, 'no item chars')
-		self.chars = item.chars
-		
 		for itemType, j_true in pairs(item.itemTypes) do
 					
 			local it = self.item[itemType]
