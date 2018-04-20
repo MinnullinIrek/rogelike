@@ -200,7 +200,8 @@ local function showTable(tbl, fstr, constTbl, pos)
 		local j = 1
 		for i = start, #tbl do
 			local str = fstr(tbl[i], i == pos)
-			putCh(str, constTbl.x+1, constTbl.y+j)
+			assert(type(str) == 'table')
+			putTbl(str, constTbl.x+1, constTbl.y+j)
 			
 			if j > constTbl.height - 1 then
 				break;
@@ -234,7 +235,14 @@ function showBag(pos,bag)
 	local selectedItem = nil
 	drawTable(consts.inventoryTbl)
 	drawTable(consts.bodyTbl)
-	showTable(bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
+	showTable(bag, 
+		function(item, b) 
+			if b then 
+				selectedItem = item 
+				end 
+			return {text = string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name), colorFg = item.isWeared and color.LightGray  or color.White}
+		end,
+		consts.inventoryTbl, pos )
 	showBody()
 	printText(Log, 'logTbl')
 	conLib.changeBuffer();
@@ -321,13 +329,14 @@ inventoryDirection =
 		if self.dir == 'i' then
 			bag = self:getHeroBag()
 		elseif self.dir == 'p' then
-			bag = self:getCellBag()
+			bag = self:getCellBag()		
 		end
 		assert(bag, 'bag is nil')
 		self.selectedItem = showBag(self.start, bag)
 	end,
 	
 	dirHandle = function(self, dir)
+		
 		if dir == 'up' and self.start > 1 then
 			self.start = self.start - 1
 		elseif dir == 'down' then
@@ -341,6 +350,14 @@ inventoryDirection =
 				local item = table.remove(bag,start)
 				table.insert(self:getHeroBag(), item)
 			end
+		elseif dir == 'd' and self.dir == 'i' then
+			Log.putMessage("dirHandle ".. dir)
+			Log.putMessage("dirHandle 'd'")
+			local cellBag = self:getCellBag()
+			local heroBag = self:getHeroBag()
+			Unit.hero.body:unWear(self.selectedItem)
+			table.insert(cellBag, table.remove(heroBag, self.start ))
+			
 		end
 	end
 }

@@ -16,8 +16,8 @@ local Cell =
 	
 	getChar = function(self)
 		if     self.unit then
-			        return {text = self.unit.ch, colorFg = color.LightBlue}
-		elseif self.bag then
+			        return {text = self.unit.ch, colorFg = color.white}
+		elseif self.bag and #self.bag > 0then
 					return {text = '$', colorFg = color.Yellow}
 		end
 		return {text = '.'}

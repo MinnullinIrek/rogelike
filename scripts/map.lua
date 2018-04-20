@@ -23,7 +23,7 @@ local map = {
 	setUnit = function(self,  row, column, unit)
 		local cell = self:getCell(row, column)
 		cell:setUnit(unit)
-		if unit then
+		if unit and unit.mover then
 			unit.mover.coords.x = row
 			unit.mover.coords.y = column
 			unit.mover.map = self

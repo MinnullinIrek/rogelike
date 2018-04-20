@@ -31,23 +31,30 @@ local bodyPart = {
 	__tostring = toStr,
 	-- items = {}
 	
-	wear = function(self, item)
+	wear = function(self, item, body)
 		assert(item.chars, 'no item chars')
+		
 		for itemType, j_true in pairs(item.itemTypes) do
 					
-			local it = self.item[itemType]
-			self:unWear(it)
+			local unwearItem = self.item[itemType]
+			
+			if(unwearItem) then
+				body:unWear(unwearItem)
+			end
+			
 			self.item[itemType] = item
+			item.isWeared = true
 			
 			Log.putMessage('wear'..self.__type..itemType)
-			
-					
 		end
 		
 	end,
 	
 	unWear = function(self, item)
-		self.chars = nil
+		for itemType, j_true in pairs(item.itemTypes) do
+			self.item[itemType] = nil
+			item.isWeared = false
+		end
 	end
 }
 bodyPart.__index = bodyPart
@@ -59,29 +66,28 @@ end
 
 local metaBody = {
 	__type = 'body',
-	wear = function(self, item)
-		
-		for bPart, k_true in pairs(item.bodyPartTypes) do
-			print('body wear', bPart, k_true)
-		    if self[bPart] then
-				print('self[',bPart,']^^^^=', self[bPart][bPart])
-				self[bPart][bPart]:wear(item)
-				-- for itemType, j_true in pairs(item.itemTypes) do
-					
-					-- local it = (self[bPart][bPart]['item'] or tnil)[itemType]
-					-- self:unWear(it)
-					-- self[bPart][bPart]['item'][itemType] = item
-					
-					-- Log.putMessage('wear'..bPart..itemType)
-					
-					
-				-- end
+	
+	iterBPartTypes = function(self, bodyPartTypes, func)
+		for bPart, k_true in pairs(bodyPartTypes) do
+			if self[bPart] then
+				func(bPart)
 			end
 		end
 	end,
+
+	wear = function(self, item)
+		if not item.isWeared then
+			self:iterBPartTypes(item.bodyPartTypes, function(bPart) self[bPart][bPart]:wear(item, self)   end)
+		else
+			self:unWear(item)
+		end
+		
+	end,
 	
 	unWear = function(self, item)
-	
+		if item.isWeared then
+			self:iterBPartTypes(item.bodyPartTypes, function(bPart) self[bPart][bPart]:unWear(item, self)   end)
+		end
 	end,
 	
 	chooseRandom = function(self, item)

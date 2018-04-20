@@ -11,10 +11,13 @@ local Mover =
 	-- unit 
 	-- map
 	jumpTo = function(self, x, y) 
-		self.map:setUnit(self.coords.x, self.coords.y, nil)
-		self.map:setUnit(x, y, self.unit)
-		self.coords.x = x
-		self.coords.y = y
+		local cell = self.map:getCell(x, y)
+		if not cell.unit then
+			self.map:setUnit(self.coords.x, self.coords.y, nil)
+			self.map:setUnit(x, y, self.unit)
+			self.coords.x = x
+			self.coords.y = y
+		end
 	end
 	
 }
@@ -52,6 +55,8 @@ function M.setDir(dir)
 	
 	local x = coords.x + dx
 	local y = coords.y + dy
+	
+	
 	
 	M.heroMover:jumpTo(x, y) 
 end

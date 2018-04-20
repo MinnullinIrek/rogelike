@@ -93,6 +93,9 @@ print(pcall(function()
 		
 		cell:putItem(item)
 		
+		local rock = Unit.createRock()
+		map.map:setUnit(10, 10, rock)
+		
 	end
 	
 	setTestItem(Unit.hero, Item)

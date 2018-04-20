@@ -34,11 +34,12 @@ local Unit =
 Unit.__index = Unit
 
 function M.createUnit(name, ch, utype)
-	return setmetatable({name = name, ch = ch, utype = utype}, Unit)	
+	utype = utype or 'unit'
+	return setmetatable({name = name, ch = ch,  __type = utype}, Unit)	
 end
 
 function M.createRock()
-	return M.createUnit('rock', rockSymb )
+	return M.createUnit('rock', rockSymb, 'rock' )
 end
 
 function M.createHero()
