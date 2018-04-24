@@ -47,14 +47,25 @@ local itemChar = {
 
 itemChar.__index = itemChar
 
-local chars = {mainChar = mainChar, itemChar = itemChar,}
-local charsInChar = { mainChar = {'hp', 'cot', 'energy'}, itemChar = {'armour'} }
+local secondChar = 
+{
+	__type = 'secondChar',
+	__tostring= toStr,
+	
+	-- perception = 10,
+	
+}
+secondChar.__index = secondChar
 
-function M.createChar(name)
+
+local chars = {mainChar = mainChar, itemChar = itemChar, secondChar = secondChar}
+local charsInChar = { mainChar = {'hp', 'cot', 'energy'}, itemChar = {'armour'}, secondChar = {'perception'} }
+
+function M.createChar(name, tbl)
 	assert(chars[name], string.format('no charType %s',name))
 	local creatingChar = {id = nextSerial()}
 	for i, ch in ipairs(charsInChar[name]) do
-		creatingChar[ch] = createChar(ch, 100, 100)
+		creatingChar[ch] = createChar(ch, tbl.value[i], tbl.maxValue and tbl.maxValue[i] or tbl.value[i])
 	end	
 	
 	return setmetatable(creatingChar, chars[name] )

@@ -79,15 +79,15 @@ print(pcall(function()
 	local Item    = require 'item'
 	
 	function setTestItem(unit, Item)
-		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar'))
+		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100}}))
 		unit.inventory:putItem(item)
 		unit.body:wear(item)
 		
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100}}))
 		unit.inventory:putItem(item)
 		unit.body:wear(item)
 
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar'))
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100}}))
 		
 		local cell = map.map:getCell(5,5)
 		
@@ -105,7 +105,7 @@ print(pcall(function()
 		i = console.getCh()
 		local dir = Dir.direction[i]
 		if dir == 'i' or dir == 'p' then
-			-- Log.putMessage("pressed i")
+			
 			console.changeRejim('bag', dir)
 		elseif dir == 'm' then
 			console.changeRejim('map', dir)

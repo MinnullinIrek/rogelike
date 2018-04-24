@@ -123,7 +123,11 @@ function printHero()
 	-- }
 	local chars = Unit.hero.chars
 	
+	-- Log.putMessage(string.format("preception =%s", chars.secondChar.perception.value))
+	
 	local count = 0
+	chars = chars.mainChar
+	
 	for i, k in pairs(chars) do
 		count = count + 1;
 		if(type(k) == 'table') then
