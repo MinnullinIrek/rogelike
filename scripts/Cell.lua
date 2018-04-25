@@ -10,17 +10,23 @@ local Cell =
 {
 	-- Unit
 	-- Bag
+	visible = 0,
 	setUnit = function(self, unit)
 		self.unit = unit
 	end,
 	
 	getChar = function(self)
-		if     self.unit then
-			        return {text = self.unit.ch, colorFg = color.white}
-		elseif self.bag and #self.bag > 0then
-					return {text = '$', colorFg = color.Yellow}
+		if self.visible > 0 then
+			if     self.unit then
+						return {text = self.unit.ch, colorFg = (self.visible == 1) and color.White or color.LightGray}
+			elseif self.bag and #self.bag > 0then
+						return {text = '$', colorFg = color.Yellow}
+			end
+			return {text = '.'}
+		else
+			return {text = ' '}
 		end
-		return {text = '.'}
+		
 	end,
 	
 	putItem = function(self, item)

@@ -54,10 +54,10 @@ print("color = ", color);
 
 -- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
 
+-- print(xpcall(start, debug.traceback))
 
 
-
-print(pcall(function()
+print(xpcall(function()
 	require 'utils'
 	local function print(...) oprint(dname, ...) end
 	
@@ -117,4 +117,4 @@ print(pcall(function()
 	
 	print("print after")	
  
- end))
+ end, debug.traceback))

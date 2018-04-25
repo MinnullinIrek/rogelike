@@ -55,6 +55,7 @@ function loadLevel(i)
 			if ch ~= ' ' then 
 				if ch == '@' then
 					mp:setUnit(start, i, Unit.hero)
+					Unit.hero:setVisibility(true)
 				elseif ch == '#' then
 					unit = trock
 				else

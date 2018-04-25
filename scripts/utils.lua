@@ -16,12 +16,16 @@ end
 	-- glLib.print(string.format("%s: %s", _G.tname, str))
 -- end
 
-oprint = function(...)
-	local str = ''
-	for i, v in ipairs(table.pack(...)) do
-		str=str..' '..tostring(v)
-	end
-	glLib.print(str)
+local showDname = nil
+
+oprint = function( ...)
+	-- if not showDname or dname == showDname then
+		local str = ''
+		for i, v in ipairs(table.pack(...)) do
+			str=str..' '..tostring(v)
+		end
+		glLib.print(str)
+	-- end
 end
 
 function toStr(self)

@@ -23,7 +23,20 @@ local Mover =
 }
 Mover.__index = Mover
 
-M.heroMover = setmetatable({coords = {x =0, y=0}}, Mover)
+M.heroMover = setmetatable({coords = {x =0, y=0}, 
+							jumpTo = function(self, x, y) 
+								self.unit:setVisibility(false)
+								local cell = self.map:getCell(x, y)
+								if not cell.unit then
+									self.map:setUnit(self.coords.x, self.coords.y, nil)
+									self.map:setUnit(x, y, self.unit)
+									self.coords.x = x
+									self.coords.y = y
+								end
+								self.unit:setVisibility(true)
+							end}, Mover)
+
+
 
 function M.setDir(dir)
 	
