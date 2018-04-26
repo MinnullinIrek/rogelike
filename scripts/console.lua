@@ -94,9 +94,13 @@ function printCell(cell, x, y)
 end
 
 function printMap(mp)
+	local xStart = Unit.hero.mover.coords.x - consts.mapTbl.width /2
+	local yStart = Unit.hero.mover.coords.y - consts.mapTbl.height /2
+	xStart = xStart > 0 and xStart or 1
+	yStart = yStart > 0 and yStart or 1
 	for i = 1, consts.mapTbl.width do
 		for j = 1, consts.mapTbl.height do
-			local cell = mp:getCell(i, j)
+			local cell = mp:getCell(xStart + i - 1, yStart + j -1)
 			printCell(cell, i, j)
 		end
 	end
@@ -113,8 +117,6 @@ local function cicleBody(body, func)
 	end
 end
 
-
-
 function printHero()
 	-- chars = {
 		-- hp     = {100, 100},
@@ -122,9 +124,6 @@ function printHero()
 		-- energy = {100, 100},	
 	-- }
 	local chars = Unit.hero.chars
-	
-	-- Log.putMessage(string.format("preception =%s", chars.secondChar.perception.value))
-	
 	local count = 0
 	chars = chars.mainChar
 	
@@ -152,10 +151,6 @@ function printHero()
 			
 		end
 	)
-
-	
-	
-	
 end
 
 function printText(tbl, key)
@@ -176,9 +171,6 @@ function printText(tbl, key)
 	end
 end
 
-
-
-
 function M.getCh()
 	local ch = conLib.getch()
 	if ch == 224 or ch == 0 then
@@ -191,9 +183,6 @@ end
 
 print('map.map', map.map)
 print('map.map.getCell', map.map.getCell)
-
-
-
 
 
 local function showTable(tbl, fstr, constTbl, pos)
@@ -214,8 +203,6 @@ local function showTable(tbl, fstr, constTbl, pos)
 		end
 	end
 end
-
-
 
 local function showBodyItemIterator(wearing, str, i)
 	if wearing then
@@ -252,8 +239,6 @@ function showBag(pos,bag)
 	conLib.changeBuffer();
 	return selectedItem
 end
-
-
 
 
 local bag = nil
