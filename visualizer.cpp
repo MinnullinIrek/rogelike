@@ -1,5 +1,15 @@
 #include "visualizer.h"
-
+std::string wstrtostr(const std::wstring &wstr)
+{
+    // Convert a Unicode string to an ASCII string
+    std::string strTo;
+    char *szTo = new char[wstr.length() + 1];
+    szTo[wstr.size()] = '\0';
+    WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo, (int)wstr.length(), NULL, NULL);
+    strTo = szTo;
+    delete[] szTo;
+    return strTo;
+}
 
 
 void SetColor(HANDLE h, Color text, Color background);
@@ -26,7 +36,7 @@ void Visualizer::changeBuffer()
 
     firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    for(int i = 0; i < 101; i++)
+    for(short i = 0; i < 101; i++)
     {
         COORD cd = {0, i};
         static char text[] = "                                                                                                    \0";
@@ -44,7 +54,7 @@ void Visualizer::setActiveBuffer(HANDLE h)
 
 
 
-void Visualizer::putchar(const char text[], int count, int cdx, int cdy, int bg, int fg)//const VisObject & visObject
+void Visualizer::putchar(const char text[], int count, short cdx, short cdy, int bg, int fg)//const VisObject & visObject
 {
     COORD cd = {cdx, cdy};
 

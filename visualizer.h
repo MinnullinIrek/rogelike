@@ -16,6 +16,8 @@ extern "C" {
 #include "visualobject.h"
 #include <string>
 
+std::string wstrtostr(const std::wstring &wstr);
+std::wstring utf8_decode(const std::string &str);
 
 using namespace std;
 
@@ -37,7 +39,7 @@ class Visualizer : public QObject
 public:
     explicit Visualizer(QObject *parent = nullptr);
     void changeBuffer();
-    void putchar(const char text[], int count, int cdx, int cdy, int bg, int fg);
+    void putchar(const char text[], int count, short cdx, short cdy, int bg, int fg);
 signals:
     void toPut();//const VisObject & visObject
 public slots:
@@ -64,14 +66,15 @@ static int l_putCh (lua_State *L) {
         wch[i] = (wchar_t)ch[i];
     }
 
-    mbstowcs (wch, ch, len);
+    //mbstowcs (wch, ch, len);
 
-    con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
+    std::string s = wstrtostr(utf8_decode(ch));
+    con.putchar(s.c_str(), len, cdX, cdY, colorBg, colorFg);
 
     return 0;
 }
 
-static int l_changeBuffer(lua_State *L)
+static int l_changeBuffer(lua_State *)
 {
     con.changeBuffer();
     return 0;
