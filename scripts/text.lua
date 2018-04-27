@@ -1,4 +1,4 @@
-local M = {}
+﻿local M = {}
 
 M.messages = {}
 
@@ -7,8 +7,8 @@ function M.putMessage(text)
 end
 
 function putTestMessages()
-	M.putMessage('qweqe')
-	M.putMessage('qweqe fdgjdlk dfgkldfjldfg2')
+	M.putMessage('ыывапвап')
+	M.putMessage('вапвап вапвпвап вапвапвап2')
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg3')
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg4')
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg5')
@@ -30,7 +30,7 @@ function putTestMessages()
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg21')
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg22')
 	M.putMessage('qweqe fdgjdlk dfgkldfjldfg23')
-	M.putMessage('qweqe fdgjdlk dfgkldfjldfg24')
+	M.putMessage('вапвапв вапвап dfgkвапррекрк')
 	
 end
 

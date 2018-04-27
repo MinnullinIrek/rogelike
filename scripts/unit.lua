@@ -1,4 +1,4 @@
-local M = {}
+﻿local M = {}
 
 local dname = "unit: "
 
@@ -50,11 +50,21 @@ function M.createHero()
 				utype = 'hero', 
 				chars = {
 							mainChar 	= Chars.createChar('mainChar', {value = {100, 100, 100}}),
-							secondChar 	= Chars.createChar('secondChar', {value = {10}}),
-							
+							secondChar 	= Chars.createChar('secondChar', {value = {10}}),							
 				}
 			},
 		Unit)
+	
+	local temp = {}
+	local i = 1
+	for name, ch in pairs(hero.chars) do
+		temp[i] = name
+		i = i + 1
+	end
+	
+	for i, name in ipairs(temp) do
+		hero.chars[i] = {name = name, value = hero.chars[name]}
+	end
 
 	return hero
 	

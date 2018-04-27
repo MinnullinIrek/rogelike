@@ -1,4 +1,4 @@
-
+﻿
 local dname = "console: "
 
 local function print(...) oprint(dname, ...) end
@@ -127,7 +127,7 @@ function printHero()
 	local count = 0
 	chars = chars.mainChar
 	
-	for i, k in pairs(chars) do
+	for i, k in ipairs(chars) do
 		count = count + 1;
 		if(type(k) == 'table') then
 			local charText = string.format('%s \t %d/%d', k.name, k.maxValue, k.value)
@@ -242,18 +242,7 @@ end
 
 
 local bag = nil
-function M.changeRejim(i, dir)
-	if     i == 'map' then
-		M.Activer = mapDirection
-	elseif i == 'bag' then
-		print('rejim bag')
-		assert(dir, 'dir is nil')
-		inventoryDirection.dir = dir
-		inventoryDirection.start = 1
-		M.Activer = inventoryDirection
-		
-	end
-end
+
 
 function showCellItems(pos)
 	local selectedItem = nil
@@ -351,7 +340,47 @@ inventoryDirection =
 	end
 }
 
+local chardirection = 
+{
+	start = 1,
+	dir = 'i',
+	
+	update = function(self)
+		local x = 3
+		for i, charValue in ipairs(Unit.hero.chars) do
+			local j = 3
+			putCh(charValue.name, x, 1)
+			for i, value in ipairs(charValue.value) do
+				if type(value) == 'table' then
+					putCh(string.format('%s    %2d/%2d', value.name, value.value or 0, value.maxValue or 0), x, i + j)
+				end
+			end
+			x = x + 30
+		end
+		
+		conLib.changeBuffer()
+	end,
+	
+	dirHandle = function(self, dir)
+		
+		
+	end
+}
+
 M.Activer = mapDirection
+
+local directions = {
+	map   = mapDirection,
+	bag   = inventoryDirection,
+	chars = chardirection,
+	
+}
+
+function M.changeRejim(i, dir)
+	M.Activer = directions[i]
+	M.Activer.dir = dir
+	M.Activer.start = 1
+end
 
 
 return M

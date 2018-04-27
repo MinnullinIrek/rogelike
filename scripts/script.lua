@@ -1,4 +1,4 @@
-package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
+﻿package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
 
 
 local dname = "script: "
@@ -105,10 +105,11 @@ print(xpcall(function()
 		i = console.getCh()
 		local dir = Dir.direction[i]
 		if dir == 'i' or dir == 'p' then
-			
 			console.changeRejim('bag', dir)
 		elseif dir == 'm' then
 			console.changeRejim('map', dir)
+		elseif dir == 'c' then
+			console.changeRejim('chars', dir)
 		else
 			console.Activer:dirHandle(dir)
 		end

@@ -1,8 +1,14 @@
-local M = {}
+﻿local M = {}
+local chars = require 'chars'
 
 local dname = "mover: "
 
 local function print(...) oprint(dname, ...) end
+
+
+local function interaction(attacker, defender)
+	chars.attack(attacker, defender)
+end
 
 
 local Mover = 
@@ -17,6 +23,8 @@ local Mover =
 			self.map:setUnit(x, y, self.unit)
 			self.coords.x = x
 			self.coords.y = y
+		else
+			interaction(self, cell.unit)
 		end
 	end
 	
