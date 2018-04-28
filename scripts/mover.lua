@@ -17,6 +17,7 @@ local Mover =
 	-- unit 
 	-- map
 	jumpTo = function(self, x, y) 
+		print('jumpTo')
 		local cell = self.map:getCell(x, y)
 		if not cell.unit then
 			self.map:setUnit(self.coords.x, self.coords.y, nil)
@@ -24,14 +25,17 @@ local Mover =
 			self.coords.x = x
 			self.coords.y = y
 		else
-			interaction(self, cell.unit)
+			print('interaction')
+			interaction(self.unit, cell.unit)
 		end
 	end
 	
 }
 Mover.__index = Mover
 
-M.heroMover = setmetatable({coords = {x =0, y=0}, 
+function M.createMover()
+
+	return setmetatable({coords = {x =0, y=0}, 
 							jumpTo = function(self, x, y) 
 								self.unit:setVisibility(false)
 								local cell = self.map:getCell(x, y)
@@ -40,11 +44,15 @@ M.heroMover = setmetatable({coords = {x =0, y=0},
 									self.map:setUnit(x, y, self.unit)
 									self.coords.x = x
 									self.coords.y = y
+								else
+									interaction(self.unit, cell.unit)
 								end
 								self.unit:setVisibility(true)
 							end}, Mover)
 
+end
 
+M.heroMover = M.createMover()
 
 function M.setDir(dir)
 	

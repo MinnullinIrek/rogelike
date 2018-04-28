@@ -16,22 +16,28 @@ end
 	-- glLib.print(string.format("%s: %s", _G.tname, str))
 -- end
 
-local showDname = nil
+local showDname = "unit: "
 
-oprint = function( ...)
-	-- if not showDname or dname == showDname then
-		local str = ''
+oprint = function(dname, ...)
+	if not showDname or dname == showDname then
+		local str = tostring(dname)
 		for i, v in ipairs(table.pack(...)) do
 			str=str..' '..tostring(v)
 		end
 		glLib.print(str)
-	-- end
+	end
 end
 
 function toStr(self)
 	return string.format('%s_%d', self.__type, self.id or 0)
 end
 
+function foreach(tbl, f, pairsF)
+	pairsF = pairsF or pairs
+	for nm, val in pairsF(tbl) do
+		f(val, nm)
+	end
+end
 color = 
 {
     Black = 0,

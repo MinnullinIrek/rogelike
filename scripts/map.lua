@@ -2,6 +2,7 @@
 local cell = require 'cell'
 local Unit = require 'unit'
 local level = require 'level'
+local Game = require 'game'
 
 local dname = "map: "
 
@@ -62,6 +63,7 @@ function loadLevel(i)
 					local temp = level[ch]			
 					if(temp and temp.__type == 'unit') then
 						unit = Unit.createUnit(temp.name, ch, temp.__type)
+						table.insert(Game.units, unit)
 					elseif(temp and temp.__type == 'item') then
 						--[[item = Item.createItem()]]
 					end

@@ -83,11 +83,11 @@ print(xpcall(function()
 		unit.inventory:putItem(item)
 		unit.body:wear(item)
 		
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100}}))
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2}}))
 		unit.inventory:putItem(item)
 		unit.body:wear(item)
 
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100}}))
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 60}}))
 		
 		local cell = map.map:getCell(5,5)
 		

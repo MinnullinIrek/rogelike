@@ -9,6 +9,7 @@ local Inventory = require 'inventory'
 local Item 		= require 'item'
 local Body 		= require 'body'
 local Chars 	= require 'chars'
+local Event     = require 'event'
 
 
 local rockSymb = '#'
@@ -20,7 +21,7 @@ local Unit =
 	ch 		  = '0',
 	utype 	  = '0',
 	
-	-- chars = Chars.createChar('mainChar', {value = {100, 100, }})
+	-- chars = Chars.createChar('finalChar', {value = {100, 100, }})
 	
 	-- chars = {
 		-- hp     = {name = 'hp    ',100, 100},
@@ -35,7 +36,23 @@ Unit.__index = Unit
 
 function M.createUnit(name, ch, utype)
 	utype = utype or 'unit'
-	return setmetatable({name = name, ch = ch,  __type = utype}, Unit)	
+	local unit = setmetatable({name = name, ch = ch,  __type = utype, chars = Chars.createAllChars()}, Unit)
+	local mover = Mover.createMover()
+	unit.mover = mover
+	mover.unit = unit
+	
+	Event.subscribe(unit.chars.finalChar.hp, 'value', 
+													function() 
+														-- print('unit.mover', unit, unit.mover)
+														if unit.chars.finalChar.hp.value < 0 then 
+															-- print('unit.mover', unit.mover)
+															local x, y = unit.mover.coords.x, unit.mover.coords.y 
+															local cell = unit.mover.map:getCell(x, y)
+															cell.unit = nil
+															-- unit = nil
+														end
+													end )
+	return unit
 end
 
 function M.createRock()
@@ -48,10 +65,11 @@ function M.createHero()
 				name = 'hero', 
 				ch = '@', 
 				utype = 'hero', 
-				chars = {
-							mainChar 	= Chars.createChar('mainChar', {value = {100, 100, 100}}),
-							secondChar 	= Chars.createChar('secondChar', {value = {10}}),							
-				}
+				chars = Chars.createAllChars()
+				-- {
+							-- finalChar 	= Chars.createChar('finalChar', {value = {100, 100, 100}}),
+							-- baseChar 	= Chars.createChar('baseChar', {value = {10}}),							
+				-- }
 			},
 		Unit)
 	
@@ -169,7 +187,7 @@ local function getSquareCoords(x, y, perception, map)
 							square[cdNext.x][cdNext.y] = position + 1
 							local dist = getDistance(x, y, cdNext.x, cdNext.y)
 							if getDistance(x, y, cdNext.x, cdNext.y) >= position  then
-								print("getDistance", dist)
+								-- print("getDistance", dist)
 								
 								table.insert(way[position+1], cdNext)
 							end
@@ -198,7 +216,7 @@ end
 
 function M.hero.setVisibility(self, bool)
 	local func = bool and funcVisible or funcNotVisible
-	local perception = self.chars.secondChar.perception.value
+	local perception = self.chars.baseChar.perception.value
 	assert(perception, 'perception is nil')
 	local x = self.mover.coords.x
 	local y = self.mover.coords.y

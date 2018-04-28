@@ -125,12 +125,12 @@ function printHero()
 	-- }
 	local chars = Unit.hero.chars
 	local count = 0
-	chars = chars.mainChar
+	chars = chars.finalChar
 	
 	for i, k in ipairs(chars) do
 		count = count + 1;
 		if(type(k) == 'table') then
-			local charText = string.format('%s \t %d/%d', k.name, k.maxValue, k.value)
+			local charText = string.format('%s \t %d/%d', k.name, k.value, k.maxValue)
 			
 			putCh(charText, consts.charTbl.x +5, consts.charTbl.y + count, color.DarkGray, color.Blue)  --coordX, coordY,
 		end
