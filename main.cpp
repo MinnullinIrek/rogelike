@@ -1,6 +1,6 @@
 ﻿#include "mainwindow.h"
-#include <QApplication>
-#include <QThread>
+//#include <QApplication>
+//#include <QThread>
 #include <iostream>
 
 #include "utils.h"
@@ -25,7 +25,7 @@ Visualizer con;
 
 
 
-QThread thread;
+//QThread thread;
 
 int luaopen_mylib (lua_State *L) {
 
@@ -39,8 +39,8 @@ int luaopen_mylib (lua_State *L) {
         lua_pop(L, 1);
         lua_newtable(L);
     }
-    luaL_setfuncs(L, glLib, 0);
-    lua_setglobal(L, "glLib");
+//    luaL_setfuncs(L, glLib, 0);
+//    lua_setglobal(L, "glLib");
 
 
 
@@ -81,7 +81,7 @@ std::wstring utf8_decode(const std::string &str)
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+//    QApplication a(argc, argv);
     SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
     SetConsoleOutputCP(1251);
 
@@ -125,5 +125,5 @@ int main(int argc, char *argv[])
 
     //    con.toPut();
 
-    return a.exec();
+    return 0;
 }

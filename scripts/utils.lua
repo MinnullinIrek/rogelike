@@ -17,16 +17,16 @@ end
 -- end
 
 local showDname = "unit: "
-
-oprint = function(dname, ...)
-	if not showDname or dname == showDname then
-		local str = tostring(dname)
-		for i, v in ipairs(table.pack(...)) do
-			str=str..' '..tostring(v)
-		end
-		glLib.print(str)
-	end
-end
+oprint = print
+-- oprint = function(dname, ...)
+	-- if not showDname or dname == showDname then
+		-- local str = tostring(dname)
+		-- for i, v in ipairs(table.pack(...)) do
+			-- str=str..' '..tostring(v)
+		-- end
+		-- glLib.print(str)
+	-- end
+-- end
 
 function toStr(self)
 	return string.format('%s_%d', self.__type, self.id or 0)

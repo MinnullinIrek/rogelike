@@ -1,7 +1,7 @@
 #ifndef VISUALIZER_H
 #define VISUALIZER_H
 
-#include <QObject>
+//#include <QObject>
 #include <windows.h>
 #include <array>
 #include <conio.h>
@@ -23,9 +23,9 @@ using namespace std;
 
 
 
-class Visualizer : public QObject
+class Visualizer
 {
-    Q_OBJECT
+//    Q_OBJECT
 
     HANDLE firstConsole;
 
@@ -37,12 +37,13 @@ class Visualizer : public QObject
 
 
 public:
-    explicit Visualizer(QObject *parent = nullptr);
+    explicit Visualizer();
     void changeBuffer();
     void putchar(const char text[], int count, short cdx, short cdy, int bg, int fg);
-signals:
+    void setMainBuffer(int val);
+//signals:
     void toPut();//const VisObject & visObject
-public slots:
+//public slots:
     //void putchar(wchar_t text[], int count, int cdx, int cdy, int bg, int fg);
 
 //const VisObject & visObject
@@ -82,16 +83,17 @@ static int l_changeBuffer(lua_State *)
 
 static int l_getch(lua_State *L)
 {
-//    int i = 0;
-//    while (true){
     int i = getch();
-//    }
-
     lua_pushinteger(L, i);
-
     return 1;
 }
 
+static int l_getFirstConsole(lua_State *L)
+{
+    int  val = lua_tointeger(L,1);
+    con.setMainBuffer(val);
+    return 0;
+}
 
 static const struct luaL_Reg conLib [] = {
 
@@ -100,6 +102,7 @@ static const struct luaL_Reg conLib [] = {
     {"putCh",           l_putCh}, //text, bg, fg
     {"changeBuffer",    l_changeBuffer},
     {"getch",           l_getch},           //() => intsymb
+    {"getFirsConsole",  l_getFirstConsole},
 
 
 

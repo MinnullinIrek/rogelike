@@ -221,7 +221,7 @@ local function showBody()
 end
 
 
-function showBag(pos,bag)
+local function showBag(pos,bag)
 	assert(bag, 'bag is nil')
 	local selectedItem = nil
 	drawTable(consts.inventoryTbl)
@@ -382,5 +382,8 @@ function M.changeRejim(i, dir)
 	M.Activer.start = 1
 end
 
+function M.mainScreen(i)
+	conLib.getFirsConsole(i)
+end
 
 return M

@@ -3,7 +3,7 @@
 
 #include "tracer.h"
 
-extern  Tracer *tracer;
+//extern  Tracer *tracer;
 
 //void trace(QString text);
 

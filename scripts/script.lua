@@ -34,7 +34,7 @@ local dname = "script: "
  
  
  
-glLib.show("dsdfs1", "sdfsdf2")
+-- glLib.show("dsdfs1", "sdfsdf2")
 
 print ("хпппп lua")
 
@@ -75,7 +75,7 @@ print(xpcall(function()
 	local mover   = require 'mover'
 	local item    = require 'item'
 	local Log     = require 'logus'
-	local Unit    = require 'unit'
+	Unit    = require 'unit'
 	local Item    = require 'item'
 	
 	function setTestItem(unit, Item)
@@ -110,12 +110,30 @@ print(xpcall(function()
 			console.changeRejim('map', dir)
 		elseif dir == 'c' then
 			console.changeRejim('chars', dir)
+		elseif dir == '~' then
+			console.mainScreen(1)
+			-- i = 32
+			local s = "enter"
+			load('print ("s = ", "enter")')()
+
+			s =io.read()
+			while s ~= 'exit' do
+				print("s = ", s)
+				print(pcall(load(s)))
+				s =io.read()
+			end
+			console.mainScreen(0)
+			conLib.changeBuffer();
 		else
 			console.Activer:dirHandle(dir)
 		end
-		console.Activer:update()
+		if i ~= 32 then
+			console.Activer:update()
+		end
+		
 	 end
 	
 	print("print after")	
  
  end, debug.traceback))
+ console.mainScreen()

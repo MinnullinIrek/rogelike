@@ -13,8 +13,9 @@ std::string wstrtostr(const std::wstring &wstr)
 
 
 void SetColor(HANDLE h, Color text, Color background);
-Visualizer::Visualizer(QObject *parent) : QObject(parent)
+Visualizer::Visualizer()
 {
+     firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     for (auto & ihandle : handles)
             ihandle = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, nullptr, CONSOLE_TEXTMODE_BUFFER, nullptr);;
         handle = handles.begin();
@@ -26,6 +27,18 @@ Visualizer::Visualizer(QObject *parent) : QObject(parent)
 }
 static LPDWORD logD2 = new DWORD;
 
+void Visualizer::setMainBuffer(int val)
+{
+    if(val)
+        setActiveBuffer(firstConsole);
+    else
+            if (handle == handles.begin())
+                setActiveBuffer(handle[1]);
+            else
+                setActiveBuffer(handle[0]);
+
+}
+
 void Visualizer::changeBuffer()
 {
     setActiveBuffer(*handle);
@@ -34,14 +47,14 @@ void Visualizer::changeBuffer()
     else
         --handle;
 
-    firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//    firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    for(short i = 0; i < 101; i++)
-    {
-        COORD cd = {0, i};
-        static char text[] = "                                                                                                    \0";
-        WriteConsoleOutputCharacterA(*handle, text, strlen(text), cd, logD2);
-    }
+//    for(short i = 0; i < 101; i++)
+//    {
+//        COORD cd = {0, i};
+//        static char text[] = "                                                                                                    \0";
+//        WriteConsoleOutputCharacterA(*handle, text, strlen(text), cd, logD2);
+//    }
 }
 
 
