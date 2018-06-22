@@ -25,7 +25,6 @@ local Mover =
 			self.coords.x = x
 			self.coords.y = y
 		else
-			print('interaction')
 			interaction(self.unit, cell.unit)
 		end
 	end
@@ -33,26 +32,31 @@ local Mover =
 }
 Mover.__index = Mover
 
-function M.createMover()
+function M.createMover(unit, x, y)
+	x = x or 0
+	y = y or 0
+	local mover = setmetatable({	coords = {x = x, y = y}, 
+							unit = unit,
+							}, Mover)
+							
+	if unit then 
+		unit.mover = mover
+	end
 
-	return setmetatable({coords = {x =0, y=0}, 
-							jumpTo = function(self, x, y) 
-								self.unit:setVisibility(false)
-								local cell = self.map:getCell(x, y)
-								if not cell.unit then
-									self.map:setUnit(self.coords.x, self.coords.y, nil)
-									self.map:setUnit(x, y, self.unit)
-									self.coords.x = x
-									self.coords.y = y
-								else
-									interaction(self.unit, cell.unit)
-								end
-								self.unit:setVisibility(true)
-							end}, Mover)
-
+	return mover
 end
 
-M.heroMover = M.createMover()
+function createHeroMover()
+	local mover = M.createMover(unit, x, y)
+	mover.jumpTo = 	function(self, x, y) 
+						self.unit:setVisibility(false)
+						Mover.jumpTo(self, x, y)
+						self.unit:setVisibility(true)
+					end
+	return mover
+end
+
+M.heroMover = createHeroMover()
 
 function M.setDir(dir)
 	

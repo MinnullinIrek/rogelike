@@ -34,7 +34,7 @@ local consts = {
 
 
 
-
+-- conLib.printBuffer(G_buffer)
 
 local coord = {
 x = 0,
@@ -44,17 +44,25 @@ y = 0
 
 
 local function putCh(text, coordX, coordY, colorBg, colorFg)
+	text = text or ''
 	colorBg = colorBg or color.Black;
 	colorFg = colorFg or color.White;
-	conLib.putCh(text, coordX, coordY, colorBg, colorFg);
+    conLib.putCh(text, coordX, coordY, colorBg, colorFg);
+	--setToBuffer(text,  coordY, coordX, colorFg, colorBg)
 end
+
+local function changeBuffer()
+	-- conLib.printBuffer(G_buffer)
+	conLib.changeBuffer()
+end
+
 
 local function putTbl(tbl, coordX, coordY)
 	putCh(tbl.text, coordX, coordY, tbl.colorBg, tbl.colorFg);
 end
 
-putCh("хввапп", 1, 1, color.Yellow, color.DarkGray)
-conLib.changeBuffer();
+putCh("хвв\nапп", 1, 1, color.Yellow, color.DarkGray)
+changeBuffer();
 
 function drawTable(tblDir)
 	local coord = {x = 0, y = 0}
@@ -80,9 +88,7 @@ end
 
 
 
-
-
--- conLib.changeBuffer();
+-- changeBuffer();
 
 
 printTables()
@@ -154,11 +160,11 @@ function printHero()
 end
 
 function printText(tbl, key)
-	if oprint then
-	oprint(tbl,key)
-	end
+	-- if oprint then
+		-- oprint(tbl,key)
+	-- end
 	local t = tbl.messages
-	traceTable(t)
+	-- traceTable(t)
 	count = 0
 	
 	for i = #t, 1, -1 do
@@ -236,7 +242,7 @@ local function showBag(pos,bag)
 		consts.inventoryTbl, pos )
 	showBody()
 	printText(Log, 'logTbl')
-	conLib.changeBuffer();
+	changeBuffer();
 	return selectedItem
 end
 
@@ -253,7 +259,7 @@ function showCellItems(pos)
 	showTable(bag, function(item, b) if b then selectedItem = item end return string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name) end, consts.inventoryTbl, pos )
 	showBody()
 	printText(Log, 'logTbl')
-	conLib.changeBuffer();
+	changeBuffer();
 	return selectedItem
 end
 
@@ -268,7 +274,7 @@ mapDirection =
 		printText(Text, 'textTbl')
 		printText(Log, 'logTbl')
 
-		conLib.changeBuffer();
+		changeBuffer();
 	end,
 	
 	dirHandle = function(self, dir)
@@ -358,7 +364,7 @@ local chardirection =
 			x = x + 30
 		end
 		
-		conLib.changeBuffer()
+		changeBuffer()
 	end,
 	
 	dirHandle = function(self, dir)

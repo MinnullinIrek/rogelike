@@ -23,7 +23,6 @@ end
 
 local BodyType = {__type = 'BodyType', __tostring = toStr}
 BodyType.__index = BodyType
--- print('rawget (self, __tostring)'..tostring(BodyType.__tostring))--rawget (BodyType, __tostring))
 
 
 local bodyPart = {

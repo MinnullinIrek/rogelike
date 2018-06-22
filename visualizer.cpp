@@ -1,4 +1,51 @@
 #include "visualizer.h"
+
+
+/* Standard error macro for reporting API errors */
+#define PERR(bSuccess, api){if(!(bSuccess)) printf("%s:Error %d from %s \
+   on line %d\n", __FILE__, GetLastError(), api, __LINE__);}
+
+void cls( HANDLE hConsole )
+{
+   COORD coordScreen = { 0, 0 };    /* here's where we'll home the
+                                       cursor */
+   BOOL bSuccess;
+   DWORD cCharsWritten;
+   CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */
+   DWORD dwConSize;                 /* number of character cells in
+                                       the current buffer */
+
+   /* get the number of character cells in the current buffer */
+
+   bSuccess = GetConsoleScreenBufferInfo( hConsole, &csbi );
+   PERR( bSuccess, "GetConsoleScreenBufferInfo" );
+   dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+   /* fill the entire screen with blanks */
+
+   bSuccess = FillConsoleOutputCharacter( hConsole, (TCHAR) ' ',
+      dwConSize, coordScreen, &cCharsWritten );
+   PERR( bSuccess, "FillConsoleOutputCharacter" );
+
+   /* get the current text attribute */
+
+   bSuccess = GetConsoleScreenBufferInfo( hConsole, &csbi );
+   PERR( bSuccess, "ConsoleScreenBufferInfo" );
+
+   /* now set the buffer's attributes accordingly */
+
+   bSuccess = FillConsoleOutputAttribute( hConsole, csbi.wAttributes,
+      dwConSize, coordScreen, &cCharsWritten );
+   PERR( bSuccess, "FillConsoleOutputAttribute" );
+
+   /* put the cursor at (0, 0) */
+
+   bSuccess = SetConsoleCursorPosition( hConsole, coordScreen );
+   PERR( bSuccess, "SetConsoleCursorPosition" );
+   return;
+}
+
+
 std::string wstrtostr(const std::wstring &wstr)
 {
     // Convert a Unicode string to an ASCII string
@@ -41,11 +88,14 @@ void Visualizer::setMainBuffer(int val)
 
 void Visualizer::changeBuffer()
 {
+
     setActiveBuffer(*handle);
     if (handle == handles.begin())
         ++handle;
     else
         --handle;
+    cls(*handle);
+
 
 //    firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -88,5 +138,18 @@ void SetColor(HANDLE h, Color text, Color background)
     SetConsoleTextAttribute(h, (static_cast<WORD>(background) << 4) | static_cast<WORD>(text));
 }
 
+void put(const char * ch, int cdx, int cdy, int colorBg , int colorFg )
+{
+    int len = strlen(ch);
+    wchar_t  wch[len];
 
+    for(int i =0; i< len; i++) {
+        wch[i] = (wchar_t)ch[i];
+    }
+
+    //mbstowcs (wch, ch, len);
+
+    std::string s = wstrtostr(utf8_decode(ch));
+    con.putchar(s.c_str(), len, cdx, cdy, colorBg, colorFg);
+}
 

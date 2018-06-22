@@ -143,6 +143,7 @@ function M.createAllChars()
 	Event.subscribe(chars.baseChar.strength, 'value',        function() chars.finalChar.attack.value    = chars.baseChar.strength.value * (1+chars.skills.closeCombat.value/100) end)
 	Event.subscribe(chars.baseChar.strength, 'maxValue',     function() chars.finalChar.attack.maxValue = chars.baseChar.strength.maxValue * (1 +chars.skills.closeCombat.maxValue/100) end)
 	
+	
 	chars.baseChar.strength.value         = 10
 	chars.baseChar.strength.maxValue      = 10
 	chars.baseChar.intelligence.value     = 10
@@ -156,10 +157,11 @@ function M.createAllChars()
 end
 
 
+local staticFist = {chars= {damage = {value = 1}}}
 
 function M.attack(attacker, defender)	
 	local nm, rh = next(attacker.body.rightHand)
-	local weapon = rh.item.weapon
+	local weapon = rh.item.weapon or staticFist
 	
 	defender.chars.finalChar.hp.value = defender.chars.finalChar.hp.value - weapon.chars.damage.value
 	print('defender ', defender.chars.finalChar.hp.value)

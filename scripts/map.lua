@@ -40,6 +40,9 @@ map.__index = map
 function M.setUnit(map, row, column, unit)
 	local cell = map:getCell(row, column)
 	cell:setUnit(unit)
+	if unit.mover then
+		unit.mover.coords.x, unit.mover.coords.y = column, row
+	end
 end
 
 
@@ -62,7 +65,8 @@ function loadLevel(i)
 				else
 					local temp = level[ch]			
 					if(temp and temp.__type == 'unit') then
-						unit = Unit.createUnit(temp.name, ch, temp.__type)
+						unit = Unit.createEnemy(temp.name, ch, temp.__type)
+						
 						table.insert(Game.units, unit)
 					elseif(temp and temp.__type == 'item') then
 						--[[item = Item.createItem()]]

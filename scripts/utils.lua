@@ -57,3 +57,28 @@ color =
     Yellow = 14,
     White = 15
 };
+
+-- local symb = {ch = '@', colorFg = color.White, colorBg = color.Black}
+-- local row = { symb + }
+
+G_buffer =
+{
+	-- [1] = {{ch = '###################################', colorFg = color.White, colorBg = color.Black, col = 1}, {ch = '_________________________', col = 30, colorFg = color.White, colorBg = color.Black,}},
+	-- [5] = {{ch = '++++++++++@', colorFg = color.Blue, colorBg = color.Black, col = 1}, {ch = '                 ', colorFg = color.White, colorBg = color.Black, col = 10}, {ch = 'hp = 100',colorFg = color.White, colorBg = color.LightGray, col = 35}},
+	
+}
+
+function setToBuffer(text,  row, col, colorFg, colorBg)
+	G_buffer[row] = G_buffer[row] or {}
+	table.insert(G_buffer[row], { ch = text, col = col, colorFg = colorFg, colorBg = colorBg})
+end
+
+function clearBuffer()
+	G_buffer = {}
+end
+
+function getDistance(x1, y1, x2, y2)
+	return math.sqrt((x1 - x2)* (x1 - x2) + (y1 - y2)* (y1 - y2))
+end
+
+

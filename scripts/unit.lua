@@ -1,4 +1,4 @@
-п»їlocal M = {}
+local M = {}
 
 local dname = "unit: "
 
@@ -10,7 +10,7 @@ local Item 		= require 'item'
 local Body 		= require 'body'
 local Chars 	= require 'chars'
 local Event     = require 'event'
-
+local text 		= require 'text'
 
 local rockSymb = '#'
 
@@ -30,62 +30,127 @@ local Unit =
 	-- }
 	-- mover
 	-- inventory
+	die = function(self)
+		
+		text.putMessage(string.format("%s died!", self.name))
+		self.mover = nil
+		self.chars = nil
+	end,
 }
 
 Unit.__index = Unit
 
-function M.createUnit(name, ch, utype)
+function createUnit(name, ch, utype)
 	utype = utype or 'unit'
 	local unit = setmetatable({name = name, ch = ch,  __type = utype, chars = Chars.createAllChars()}, Unit)
+	
+	
+	
 	local mover = Mover.createMover()
 	unit.mover = mover
 	mover.unit = unit
 	
-	Event.subscribe(unit.chars.finalChar.hp, 'value', 
-													function() 
-														-- print('unit.mover', unit, unit.mover)
-														if unit.chars.finalChar.hp.value < 0 then 
-															-- print('unit.mover', unit.mover)
-															local x, y = unit.mover.coords.x, unit.mover.coords.y 
-															local cell = unit.mover.map:getCell(x, y)
-															cell.unit = nil
-															-- unit = nil
-														end
-													end )
+	
 	return unit
 end
 
 function M.createRock()
-	return M.createUnit('rock', rockSymb, 'rock' )
+	return createUnit('rock', rockSymb, 'rock' )
 end
 
-function M.createHero()
-	local hero = setmetatable(
+
+function createMob(name, ch, utype)
+	local mob = setmetatable(
 			{
-				name = 'hero', 
-				ch = '@', 
-				utype = 'hero', 
+				name  = name, 
+				ch    = ch, 
+				utype = utype, 
 				chars = Chars.createAllChars()
-				-- {
-							-- finalChar 	= Chars.createChar('finalChar', {value = {100, 100, 100}}),
-							-- baseChar 	= Chars.createChar('baseChar', {value = {10}}),							
-				-- }
+				
 			},
 		Unit)
 	
 	local temp = {}
 	local i = 1
-	for name, ch in pairs(hero.chars) do
+	for name, ch in pairs(mob.chars) do
 		temp[i] = name
 		i = i + 1
 	end
 	
 	for i, name in ipairs(temp) do
-		hero.chars[i] = {name = name, value = hero.chars[name]}
+		mob.chars[i] = {name = name, value = mob.chars[name]}
 	end
+	
+	Event.subscribe(mob.chars.finalChar.hp, 'value', 
+													function()
+														local maxV = mob.chars.finalChar.hp.maxValue
+														local val  = mob.chars.finalChar.hp.value
+														local level = ''
+														if val < maxV then
+															if val > 0.6 * maxV then
+																level = 'легкое'
+															elseif val > 0.3 * maxV then
+																level = 'среднее'
+															elseif val > 0.2 * maxV then
+																level = 'тяжело'
+															elseif val > 0.1 * maxV then
+																level = 'фатально'
+															end
+															text.putMessage(string.format('%s получил %s раненение', mob.name, level))
+														elseif val > maxV then
+															text.putMessage(string.format('ОГО, %s раскачался ', mob.name))
+														end
+														
+														
+														if mob.chars.finalChar.hp.value < 0 then 
+															mob:die()
+															-- print('unit.mover', unit.mover)
+															local x, y = mob.mover.coords.x, mob.mover.coords.y 
+															local cell = mob.mover.map:getCell(x, y)
+															cell.unit = nil
+															-- unit = nil
+														end
+													end )
+	
+	return mob
+end
 
+
+function M.createHero()
+	local hero = createMob('hero', '@', 'hero')
+	hero.body = Body.createBody()
 	return hero
 	
+end
+
+function M.createEnemy(name, ch, utype)
+	local mob = createMob(name, ch, utype)
+	Mover.createMover(mob)
+	mob.step = function(self)
+		local x, y = self.mover.coords.x, self.mover.coords.y
+		local perception = self.chars.baseChar.perception.value
+		
+			
+			local herox, heroy = game.hero.mover.coords.x, game.hero.mover.coords.y
+			
+			local dist = getDistance(x, y, herox, heroy)
+			local newX, newY = 0, 0
+			if perception >= dist then
+				if x-herox ~= 0 then
+					newX = (herox - x)/math.abs(herox - x)
+				end
+				
+				if y-heroy ~= 0 then
+					newY = (heroy - y)/math.abs(heroy - y)
+				end
+				
+				self.mover:jumpTo(x + newX, y + newY)			
+			end
+		
+	end
+	mob.body = Body.createBody()
+	ai.mobs[mob] = true
+	return mob
 end
 
 
@@ -96,7 +161,7 @@ M.hero.mover			= Mover.heroMover
 M.hero.inventory 		= Inventory.heroInventory
 Inventory.heroInventory = M.hero
 
-M.hero.body = Body.createBody()
+
 
 local function getRay(x1, y1, x2, y2)
 	local ray = {}
@@ -156,9 +221,7 @@ local function getLittleSquare(x, y)
 	return {{x = x - 1, y = y - 1}, {x = x, y = y - 1}, {x = x+1, y = y-1}, {x= x+1, y = y}, {x= x+1, y = y+1}, {x = x, y = y+1}, {x = x-1, y = y+1}, {x = x-1, y = y}}
 end
 
-local function getDistance(x1, y1, x2, y2)
-	return math.sqrt((x1 - x2)* (x1 - x2) + (y1 - y2)* (y1 - y2))
-end
+
 
 local function getSquareCoords(x, y, perception, map)
 	-- perception = 15

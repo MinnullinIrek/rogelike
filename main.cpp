@@ -81,49 +81,27 @@ std::wstring utf8_decode(const std::string &str)
 
 int main(int argc, char *argv[])
 {
-//    QApplication a(argc, argv);
+
     SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
     SetConsoleOutputCP(1251);
 
 
-//    wgl = new GLWidget;
-
-    //printf("%s", "sdfddf");
     lua_State *L = luaL_newstate();
 
     luaopen_mylib (L);
     luaL_openlibs(L);
+    int j;
+    std::cin >> j ;
+    try{
+        luaL_dofile(L, "C:/books/roge/rogelike/scripts/script.lua");
 
-    //luaL_dofile(L, "C:/books/roge/rogelike/scripts/script.lua");
-    luaL_dofile(L, "C:/books/roge/rogelike/scripts/script.lua");
-    //std::thread thr([=](){luaL_dofile(L, "C:/books/roge/rogelike/scripts/script.lua");});
-
-    //thr.join();
-
-
-
-//    tracer = new Tracer;
-
-    //Trace("asdadsda");
+    }
+    catch(...)
+    {
+        getchar();
+    }
 
 
-
-
-    v.bgColor = Color::Blue;
-    v.objColor = Color::Green;
-    v.ch = L"D";
-
-
-
-
-    //wgl->show();
-
-
-    //    thread.start();
-
-    //    con.moveToThread(&thread);
-
-    //    con.toPut();
 
     return 0;
 }

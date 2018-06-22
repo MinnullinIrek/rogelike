@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <array>
 #include <conio.h>
+#include <assert.h>
 
 extern "C" {
 # include <lua.h>
@@ -51,6 +52,8 @@ public:
 
 extern Visualizer con;
 
+void put(const char * ch, int cdx, int cdy, int colorBg = 0, int colorFg = 15);
+
 static int l_putCh (lua_State *L) {
     const char * ch = (lua_tostring(L,1));
     int  cdX = lua_tointeger(L,2);
@@ -61,16 +64,17 @@ static int l_putCh (lua_State *L) {
     //int count   = lua_tointeger(L, 6);
     int len = strlen(ch);
 
-    wchar_t  wch[len];
+//    wchar_t  wch[len];
 
-    for(int i =0; i< len; i++) {
-        wch[i] = (wchar_t)ch[i];
-    }
+//    for(int i =0; i< len; i++) {
+//        wch[i] = (wchar_t)ch[i];
+//    }
 
     //mbstowcs (wch, ch, len);
 
-    std::string s = wstrtostr(utf8_decode(ch));
-    con.putchar(s.c_str(), len, cdX, cdY, colorBg, colorFg);
+//    std::string s = wstrtostr(utf8_decode(ch));
+
+    con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
 
     return 0;
 }
@@ -78,6 +82,7 @@ static int l_putCh (lua_State *L) {
 static int l_changeBuffer(lua_State *)
 {
     con.changeBuffer();
+
     return 0;
 }
 
@@ -95,6 +100,64 @@ static int l_getFirstConsole(lua_State *L)
     return 0;
 }
 
+static int l_printBuffer(lua_State *L)
+{
+    lua_pushnil(L);
+    while(lua_next(L, -2)){
+        if(lua_type(L, -1) == LUA_TTABLE) {
+            int row = lua_tointeger(L, -2);
+
+            for(int i = 1; ;i++) {
+                lua_pushinteger(L, i);
+                lua_gettable(L, -2);
+                if(lua_type(L, -1) == LUA_TTABLE) {
+                    lua_pushstring(L, "ch");
+                    lua_gettable(L, -2);
+                    assert(lua_type(L, -1) == LUA_TSTRING);
+
+                    const char * ch = lua_tostring(L, -1);
+                    lua_pop(L, 1);
+
+                    lua_pushstring(L, "colorFg");
+                    lua_gettable(L, -2);
+                    assert(lua_type(L, -1) == LUA_TNUMBER);
+                    int colorFg = lua_tointeger(L, -1);
+                    lua_pop(L, 1);
+
+                    lua_pushstring(L, "colorBg");
+                    lua_gettable(L, -2);
+                    assert(lua_type(L, -1) == LUA_TNUMBER);
+                    int colorBg = lua_tointeger(L, -1);
+                    lua_pop(L, 1);
+
+                    lua_pushstring(L, "col");
+                    lua_gettable(L, -2);
+                    assert(lua_type(L, -1) == LUA_TNUMBER);
+                    int col = lua_tointeger(L, -1);
+                    lua_pop(L, 1);
+
+                    put(ch, col, row, colorBg,colorFg );
+
+                    lua_pop(L, 1);
+                }
+                else{
+                    lua_pop(L, 1);
+                    break;
+                }
+            }
+            lua_pop(L, 1);
+        }else {
+            lua_pop(L, 1);
+            break;
+        }
+
+    }
+    lua_settop(L, 0);
+
+    return 0;
+
+}
+
 static const struct luaL_Reg conLib [] = {
 
 
@@ -103,6 +166,7 @@ static const struct luaL_Reg conLib [] = {
     {"changeBuffer",    l_changeBuffer},
     {"getch",           l_getch},           //() => intsymb
     {"getFirsConsole",  l_getFirstConsole},
+    {"printBuffer",    l_printBuffer},
 
 
 
