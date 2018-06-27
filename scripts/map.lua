@@ -75,7 +75,7 @@ function loadLevel(i)
 			end
 			
 			if unit then
-				print('mp:setUnit(rock)')
+				-- print('mp:setUnit(rock)')
 				mp:setUnit( start,i, unit)
 			end
 			start = start + 1

@@ -16,17 +16,18 @@ local Cell =
 	end,
 	
 	getChar = function(self)
-		if self.visible > 0 then
-			if     self.unit then
-						return {text = self.unit.ch, colorFg = (self.visible == 1) and color.White or color.LightGray}
-			elseif self.bag and #self.bag > 0then
-						return {text = '$', colorFg = color.Yellow}
+		if self.visible == 1 then
+			if self.unit then
+				return {text = self.unit.ch, colorFg = (self.visible == 1) and color.White or color.LightGray}
+			elseif self.bag and #self.bag > 0 then
+				return {text = '$', colorFg = color.Yellow}
 			end
-			return {text = '.'}
-		else
-			return {text = ' '}
+		elseif self.seen then
+			if self.unit then
+				return {text = self.unit.ch, colorFg = color.LightGray}
+			end
 		end
-		
+		return {text = ' '}
 	end,
 	
 	putItem = function(self, item)
@@ -50,6 +51,12 @@ local Cell =
 	end,
 }
 Cell.__index = Cell
+-- Cell.__newindex = function(self, key, value)
+	-- if(key == 'visible') then
+		-- rawset (self, 'seen', self.seen or value == 1)
+	-- end	
+	-- rawset (self, key, value)
+-- end
 
 function M.createCell()
 	return setmetatable({}, Cell)

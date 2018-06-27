@@ -1,7 +1,4 @@
-п»їpackage.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
 
-
-local dname = "script: "
 
 
 
@@ -13,6 +10,10 @@ local dname = "script: "
 
 
 print(xpcall(function()
+	package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
+
+
+	local dname = "script: "
 	require 'utils'
 	local function print(...) oprint(dname, ...) end
 	
@@ -25,7 +26,7 @@ print(xpcall(function()
 	print("print before", tname)
 	local Dir     = require 'direction'
 	local map     = require 'map'
-	console = require 'console'
+	console       = require 'console'
 	
 	local mover   = require 'mover'
 	local item    = require 'item'
@@ -36,16 +37,26 @@ print(xpcall(function()
 	game.hero = Unit.hero
 	
 	function setTestItem(unit, Item)
-		local item = Item.createItem('cuirass', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100}}))
-		unit.inventory:putItem(item)
-		unit.body:wear(item)
 		
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2}}))
-		unit.inventory:putItem(item)
-		unit.body:wear(item)
+		local function setItem(name, ch, type, tblLight, tblBodyPart,chars, descripion)
+			local item = Item.createItem(name, ch, type, tblLight, tblBodyPart, chars, descripion)
+			unit.inventory:putItem(item)
+			unit.body:wear(item)
+		end
+		
+		setItem('кираса', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 'старая ржавая кираса')
+		setItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2, 100}}), 'меч покрыт толстым слоем ржавчины')
+		setItem('средний шлем', 'Н', 'armour', {medium = true}, {head=true, neck = true}, Char.createChar('itemChar', {value = {100,  40, 100}}), 'шлем покрытый волнистыми узорами')
+		
+		setItem('перчатка', 'П', 'armour', {light = true}, {leftHand=true, leftArm = true}, Char.createChar('itemChar', {value = {100, 20, 100}}), 'длинная перчаточка')
+		setItem('железная перчатка', 'J', 'armour', {hevy = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 70, 100}}), 'тяжёлая металлическая пречатка')
+		
+		setItem('кожаный сапог', 'B', 'armour', {medium = true}, {leftLeg=true, leftFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 	'обычный сапог')
+		setItem('кожаный сапог', 'B', 'armour', {medium = true}, {rightLeg=true, rightFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 			'обычный сапог')
 		
 		
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 60}}))
+				
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 60}}), 'старый ржавый меч')
 		
 		local cell = map.map:getCell(5,5)
 		

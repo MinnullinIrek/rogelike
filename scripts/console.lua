@@ -26,7 +26,8 @@ local consts = {
 	consoleSize  = {x = 100, y = 100},
 	
 	inventoryTbl = {x = 2,   y = 2,  height = 50, width = 50},
-	bodyTbl 	 = { x = 52, y = 2,  height = 50, width = 40},
+	bodyTbl 	 = {x = 52, y = 2,  height = 50, width = 40},
+	itemTbl		 = {x = 2,   y = 52,  height = 20, width = 100},
 	
 	
 
@@ -114,11 +115,11 @@ end
 
 local function cicleBody(body, func)
 	for i, tbl in ipairs(Unit.hero.body) do
-		local nm, bpart = next(tbl)
+		local nm, bpart = tbl.name, tbl.bpart
 		local __type = bpart.__type
 		local wearing = bpart.item
 		
-		print("type "..__type)
+		-- print("type "..__type)
 		func(wearing,nm, i)
 	end
 end
@@ -160,11 +161,7 @@ function printHero()
 end
 
 function printText(tbl, key)
-	-- if oprint then
-		-- oprint(tbl,key)
-	-- end
 	local t = tbl.messages
-	-- traceTable(t)
 	count = 0
 	
 	for i = #t, 1, -1 do
@@ -232,6 +229,7 @@ local function showBag(pos,bag)
 	local selectedItem = nil
 	drawTable(consts.inventoryTbl)
 	drawTable(consts.bodyTbl)
+	drawTable(consts.itemTbl)
 	showTable(bag, 
 		function(item, b) 
 			if b then 
@@ -240,6 +238,9 @@ local function showBag(pos,bag)
 			return {text = string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name), colorFg = item.isWeared and color.LightGray  or color.White}
 		end,
 		consts.inventoryTbl, pos )
+	local item = bag[pos]
+	-- coordX, coordY, colorBg, colorFg
+	putCh( item.description, 3, 53)
 	showBody()
 	printText(Log, 'logTbl')
 	changeBuffer();

@@ -49,8 +49,8 @@ weapon.__index = weapon
 
 local itemMTypes = {armour = armour, weapon = weapon, item = item}
 
-function M.createItem(name, ch, __type, itemTypes, bodyPartTypes, chars)
-	local item = {name = name, ch = ch or '$', itemTypes = itemTypes, bodyPartTypes = bodyPartTypes, id = nextSerial(), chars = chars}
+function M.createItem(name, ch, __type, itemTypes, bodyPartTypes, chars, description)
+	local item = {name = name, ch = ch or '$', itemTypes = itemTypes, bodyPartTypes = bodyPartTypes, id = nextSerial(), chars = chars, description = description}
 
 	return setmetatable(item, itemMTypes[__type])
 end

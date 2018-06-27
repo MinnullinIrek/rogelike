@@ -81,4 +81,67 @@ function getDistance(x1, y1, x2, y2)
 	return math.sqrt((x1 - x2)* (x1 - x2) + (y1 - y2)* (y1 - y2))
 end
 
+function randomGame(a, b)
+	local cn = c or  math.random(1, a+b)
+	
+	return cn <= a and 1 or 2
+end
+
+function randomTbl(tbl)
+	local max = 0
+	for i, value in ipairs(tbl) do
+		max = max + value
+	end
+	
+	local cn = math.random(1, max)
+	max = 0
+	for i, value in ipairs(tbl) do
+		max = max + value
+		if cn <= max then
+			return i
+		end
+	end
+end
+
+
+function testRandom()
+	
+	if randomGame(1, 10, 1) == 1 then
+		print("1 ok")
+	else
+		print("*******************************************ERROR 1*****************************")
+	end
+	
+	if randomGame(10, 100, 20) == 2 then
+		print("2 ok")
+	else
+		print("*******************************************ERROR 2*****************************")
+	end
+	
+	if randomGame(10, 100, 9) == 1 then
+		print("3 ok")
+	else
+		print("*******************************************ERROR 3*****************************")
+	end
+	
+	if randomGame(10, 100, 10) == 1 then
+		print("3 ok")
+	else
+		print("*******************************************ERROR 3*****************************")
+	end
+	
+	if randomGame(10, 100, 90) == 2 then
+		print("4 ok")
+	else
+		print("*******************************************ERROR 4*****************************")
+	end
+	
+	if randomGame(10, 100, 110) == 2 then
+		print("5 ok")
+	else
+		print("*******************************************ERROR 5*****************************")
+	end
+	
+end
+
 

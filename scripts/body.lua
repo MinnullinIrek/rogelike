@@ -1,4 +1,4 @@
-п»їlocal M = {}
+local M = {}
 
 local dname = "body: "
 
@@ -62,7 +62,25 @@ function createBodyPart(name)
 	return setmetatable({__type = name, item = createWearing(), id = nextSerial()}, bodyPart)
 end
 
-
+local bodyTbl = {
+		3,
+		3,
+		10,
+		10,
+		5,
+		5,
+		5,
+		5,
+		60,
+		10,
+		10,
+		3,
+		3,
+		3,
+		3,
+		3,
+}
+		
 local metaBody = {
 	__type = 'body',
 	
@@ -76,7 +94,11 @@ local metaBody = {
 
 	wear = function(self, item)
 		if not item.isWeared then
-			self:iterBPartTypes(item.bodyPartTypes, function(bPart) self[bPart][bPart]:wear(item, self)   end)
+			self:iterBPartTypes(item.bodyPartTypes, function(bPart) 
+				print('wear', bPart, self[bPart])
+				self[bPart]['bpart']:wear(item, self)
+
+			end)
 		else
 			self:unWear(item)
 		end
@@ -85,13 +107,13 @@ local metaBody = {
 	
 	unWear = function(self, item)
 		if item.isWeared then
-			self:iterBPartTypes(item.bodyPartTypes, function(bPart) self[bPart][bPart]:unWear(item, self)   end)
+			self:iterBPartTypes(item.bodyPartTypes, function(bPart) self[bPart]['bpart']:unWear(item, self)   end)
 		end
 	end,
 	
-	chooseRandom = function(self, item)
-		local i = math.random(1, #self)
-		return next(self[i])
+	chooseRandom = function(self)
+		return self[randomTbl(bodyTbl)]
+		
 	end,
 	
 }
@@ -104,22 +126,22 @@ function M.createBody()
 	{
 		id = nextSerial(),
 
-		[1]  = {head 			= createBodyPart('head'),		},
-		[2]  = {neck 			= createBodyPart('neck'),		},
-		[3]  = {leftShoulder 	= createBodyPart('shoulder'),	},
-		[4]  = {rightShoulder 	= createBodyPart('shoulder'),	},
-		[5]  = {leftArm 		= createBodyPart('arm'),		},
-		[6]  = {rightArm 		= createBodyPart('arm'),		},
-		[7]  = {leftHand 		= createBodyPart('hand'),		},
-		[8]  = {rightHand 		= createBodyPart('hand'),		},
-		[9]  = {brest          	= createBodyPart('brest'),		},
-		[10] = {belt 			= createBodyPart('belt'),		},
-		[11] = {leftHip 		= createBodyPart('hip'),		},
-		[12] = {rightHip 		= createBodyPart('hip'),		},
-		[13] = {leftLeg 		= createBodyPart('leg'),		},
-		[14] = {rightLeg 		= createBodyPart('leg'),		},
-		[15] = {leftFoot 		= createBodyPart('foot'),		},
-		[16] = {rightFoot 		= createBodyPart('foot'),		},		
+		[1]  = {bpart			= createBodyPart('head'),	   	name = 'голова',	},
+		[2]  = {bpart			= createBodyPart('neck'),	 	name = 'шея',		},
+		[3]  = {bpart        	= createBodyPart('shoulder'),	name = 'л. плечо',	},
+		[4]  = {bpart         	= createBodyPart('shoulder'),	name = 'п. плечо',	},
+		[5]  = {bpart   		= createBodyPart('arm'),		name = 'л. рука',	},
+		[6]  = {bpart	 		= createBodyPart('arm'),		name = 'п. рука',	},
+		[7]  = {bpart    		= createBodyPart('hand'),		name = 'л. кисть',	},
+		[8]  = {bpart     		= createBodyPart('hand'),		name = 'п. кисть',	},
+		[9]  = {bpart          	= createBodyPart('brest'),		name = 'грудь',		},
+		[10] = {bpart			= createBodyPart('belt'),		name = 'поясница',	},
+		[11] = {bpart   		= createBodyPart('hip'),		name = 'л. бедро',	},
+		[12] = {bpart    		= createBodyPart('hip'),		name = 'п. бедро',	},
+		[13] = {bpart   		= createBodyPart('leg'),		name = 'л. нога',	},
+		[14] = {bpart    		= createBodyPart('leg'),		name = 'п. нога',	},
+		[15] = {bpart    		= createBodyPart('foot'),		name = 'л. ступня',	},
+		[16] = {bpart     		= createBodyPart('foot'),		name = 'п. ступня',	},		
 	}, metaBody)
 	
 	

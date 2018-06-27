@@ -11,6 +11,8 @@ local Body 		= require 'body'
 local Chars 	= require 'chars'
 local Event     = require 'event'
 local text 		= require 'text'
+local Log       = require 'logus'
+
 
 local rockSymb = '#'
 
@@ -33,8 +35,14 @@ local Unit =
 	die = function(self)
 		
 		text.putMessage(string.format("%s died!", self.name))
+		local x, y = self.mover.coords.x, self.mover.coords.y 
+		local cell = self.mover.map:getCell(x, y)
+		ai.mobs[self]   = nil
+		Log.putMessage(string.format("%d %d!", x, y))
+		cell.unit  = nil
 		self.mover = nil
 		self.chars = nil
+		
 	end,
 }
 
@@ -86,28 +94,36 @@ function createMob(name, ch, utype)
 														local maxV = mob.chars.finalChar.hp.maxValue
 														local val  = mob.chars.finalChar.hp.value
 														local level = ''
-														if val < maxV then
-															if val > 0.6 * maxV then
-																level = 'легкое'
-															elseif val > 0.3 * maxV then
-																level = 'среднее'
-															elseif val > 0.2 * maxV then
-																level = 'тяжело'
-															elseif val > 0.1 * maxV then
-																level = 'фатально'
-															end
-															text.putMessage(string.format('%s получил %s раненение', mob.name, level))
-														elseif val > maxV then
-															text.putMessage(string.format('ОГО, %s раскачался ', mob.name))
+														if name == 'kobold' then
+															Log.putMessage(string.format('kobold hp = %d', val))
 														end
 														
-														
-														if mob.chars.finalChar.hp.value < 0 then 
+														if mob.chars.finalChar.hp.value <= 0 then 
+															Event.unsubscribe(mob.chars.finalChar.hp, 'value')
 															mob:die()
+														else
+															if val < maxV and val > 0 then
+																if val > 0.6 * maxV then
+																	level = 'легкое'
+																elseif val > 0.3 * maxV then
+																	level = 'среднее'
+																elseif val > 0.2 * maxV then
+																	level = 'тяжело'
+																elseif val > 0.1 * maxV then
+																	level = 'фатально'
+																end
+																text.putMessage(string.format('%s получил %s раненение', mob.name, level))
+															elseif val > maxV then
+																text.putMessage(string.format('ОГО, %s раскачался ', mob.name))
+															elseif val < 0 then
+																text.putMessage('он уже мёртв')
+															end
+															
+														
+														
+															
 															-- print('unit.mover', unit.mover)
-															local x, y = mob.mover.coords.x, mob.mover.coords.y 
-															local cell = mob.mover.map:getCell(x, y)
-															cell.unit = nil
+															
 															-- unit = nil
 														end
 													end )
@@ -203,10 +219,10 @@ local function funcVisible(hero,lineCd, visible)
 	local x, y = lineCd[1], lineCd[2]
 	local cell = hero.mover.map:getCell(x, y)
 	local unit = cell.unit
-	print("visible", x, y, visible)
 	cell.visible = (cell.visible or 0) + visible
 	if unit and unit.__type == 'rock' then
 		visible = - 1
+		seen = true
 	end
 end
 
@@ -278,7 +294,6 @@ end
 
 
 function M.hero.setVisibility(self, bool)
-	local func = bool and funcVisible or funcNotVisible
 	local perception = self.chars.baseChar.perception.value
 	assert(perception, 'perception is nil')
 	local x = self.mover.coords.x
@@ -294,6 +309,7 @@ function M.hero.setVisibility(self, bool)
 			for j , cd in ipairs(coords) do
 				local cell = map:getCell(cd.x, cd.y)
 				cell.visible = visible
+				cell.seen = true
 			end
 		end
 	else

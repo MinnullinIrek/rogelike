@@ -11,6 +11,12 @@ function M.subscribe(obj, event, func)
     table.insert(M[obj][event], func)
 end
 
+function M.unsubscribe(obj, event)
+	if M[obj] then
+		M[obj][event] = nil
+	end
+end
+
 function M.send(obj, event)
     foreach(((M[obj] or tnil)[event] or tnil), function(f) f() end)
 end
