@@ -104,16 +104,51 @@ local charsInChar = {
 							'meleeCombat',
 							'magikCombat',
 							'trained',
-						}
-					}
+						},
+						
+
+					
+}
+
+local charsInChar_r = 
+{
+	finalChar = {
+		'hp',
+		'cot',
+		'энергия',
+		'атака',
+		'увертливость',
+		'точность',
+	}, 
+	itemChar = {
+		'броня',
+		'урон',
+		'hp',
+	},
+	baseChar = {
+		'восприятие',
+		'сила',
+		'ловкость',
+		'выносливость',
+		'мудрость',
+		'инеллект',
+		'харизма'
+	},
+	skills = {
+		'ближний бой',
+		'дальний бой',
+		'магический бой',
+		'тренированность',
+	}
+}
 
 function M.createChar(name, tbl)
 	-- print('M.createChar', tbl[2])
 	local creatingChar = {id = nextSerial()}
 	for i, ch in ipairs(charsInChar[name]) do
-		local tempCh = createChar(ch, tbl.value[i], tbl.maxValue and tbl.maxValue[i] or tbl.value[i])
+		local tempCh     = createChar(charsInChar_r[name][i], tbl.value[i], tbl.maxValue and tbl.maxValue[i] or tbl.value[i])
 		creatingChar[ch] = tempCh
-		creatingChar[i] = tempCh
+		creatingChar[i]  = tempCh
 	end
 	
 	return setmetatable(creatingChar, baseChar )
@@ -172,41 +207,38 @@ function M.createAllChars()
 end
 
 
-local staticFist = {chars= {damage = {value = 1}}}
+local staticFist = {chars= {armour = {value = 10}, damage = {value = 1}, hp = {value = 10}}}
 
 function M.attack(attacker, defender)	
 	
 	if defender.__type ~= 'rock' then
 	
-		local rh = attacker.body.rightHand.bpart
-		local weapon = rh.item.weapon or staticFist
-		
-		if randomGame(attacker.chars.finalChar.accuracy.value, attacker.chars.finalChar.dodge.value) == 1 then
+
+		local weapon = attacker.body.rightHand.bpart.item.weapon or staticFist
+		print('weapon', weapon.chars.armour)
+
+		if randomGame(attacker.chars.finalChar.accuracy.value, defender.chars.finalChar.dodge.value) == 1 then
 			
 			local bpart = defender.body:chooseRandom()
-			
 			local items = bpart.bpart.item
-			
+			local armourBreak = weapon.chars.armour.value
 			local armour = 0
 			
-			
-			local arType = ''
 			if 		items.heavy   and items.heavy.chars.armour.value > 0  then
 				arType = 'heavy'
+				armour = items.heavy.chars.armour.value
 			elseif  items.medium  and items.medium.chars.armour.value > 0  then
 				arType = 'medium'
+				armour = items.medium.chars.armour.value
 			elseif  items.light   and items.light.chars.armour.value > 0  then
 				arType = 'light'
+				armour = items.light.chars.armour.value
 			end
 			
-			if arType ~= '' then
-				Text.putMessage(string.format('%s заблокировал', items[arType].name))
-				
-				items[arType].chars.armour.value = items[arType].chars.armour.value - weapon.chars.damage.value
-			else
-				Text.putMessage(string.format('попал в %s', bpart.name))
-				
+			if randomGame(weapon.chars.armour.value, armour) == 1 then
 				defender.chars.finalChar.hp.value = defender.chars.finalChar.hp.value - weapon.chars.damage.value
+			else
+				Text.putMessage(string.format('%s заблокировал удар по %s', defender.name, bpart.name ))
 			end
 		else
 			Text.putMessage(string.format('%s увернулся',defender.name))

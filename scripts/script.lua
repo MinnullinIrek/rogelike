@@ -40,6 +40,7 @@ print(xpcall(function()
 		
 		local function setItem(name, ch, type, tblLight, tblBodyPart,chars, descripion)
 			local item = Item.createItem(name, ch, type, tblLight, tblBodyPart, chars, descripion)
+			
 			unit.inventory:putItem(item)
 			unit.body:wear(item)
 		end

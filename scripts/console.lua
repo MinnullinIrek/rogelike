@@ -224,6 +224,22 @@ local function showBody()
 end
 
 
+local function showItemDescription(item)
+	if item then
+		
+		local chars = item.chars
+		local str = ''
+		for name, ch in pairs(chars) do
+			if type(ch) == 'table' and type(name) == 'string' then
+				str = string.format('%s [%s:%d]', str, name, ch.value)
+			end
+		end
+		
+		putCh( str, 3, 53)
+		putCh( item.description, 3, 55)
+	end
+end
+
 local function showBag(pos,bag)
 	assert(bag, 'bag is nil')
 	local selectedItem = nil
@@ -238,11 +254,13 @@ local function showBag(pos,bag)
 			return {text = string.format("[%s] %s  %s", b and '*' or ' ', item.ch, item.name), colorFg = item.isWeared and color.LightGray  or color.White}
 		end,
 		consts.inventoryTbl, pos )
-	local item = bag[pos]
+	
+	
 	-- coordX, coordY, colorBg, colorFg
-	putCh( item.description, 3, 53)
+	showItemDescription(bag[pos])
+	
 	showBody()
-	printText(Log, 'logTbl')
+	-- printText(Log, 'logTbl')
 	changeBuffer();
 	return selectedItem
 end
