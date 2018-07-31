@@ -171,14 +171,14 @@ function M.createAllChars()
 		chars[name] = createLittleChar(name)
 	end
 	
-	Event.subscribe(chars.baseChar.constitution, 'value', function() chars.finalChar.hp.value = chars.baseChar.constitution.value * 10 end)
-	Event.subscribe(chars.baseChar.constitution, 'maxValue', function() chars.finalChar.hp.maxValue = chars.baseChar.constitution.maxValue * 10 end)
+	Event.subscribe(chars.baseChar.constitution, 'value',        function() chars.finalChar.hp.value = chars.baseChar.constitution.value * 10 end)
+	Event.subscribe(chars.baseChar.constitution, 'maxValue',     function() chars.finalChar.hp.maxValue = chars.baseChar.constitution.maxValue * 10 end)
 
-	Event.subscribe(chars.baseChar.intelligence, 'value', function() chars.finalChar.cot.value = chars.baseChar.intelligence.value * 10 end)
-	Event.subscribe(chars.baseChar.intelligence, 'maxValue', function() chars.finalChar.cot.maxValue = chars.baseChar.intelligence.maxValue * 10 end)
+	Event.subscribe(chars.baseChar.intelligence, 'value',        function() chars.finalChar.cot.value = chars.baseChar.intelligence.value * 10 end)
+	Event.subscribe(chars.baseChar.intelligence, 'maxValue',     function() chars.finalChar.cot.maxValue = chars.baseChar.intelligence.maxValue * 10 end)
 
-	Event.subscribe(chars.baseChar.constitution, 'value', function() chars.finalChar.energy.value = chars.baseChar.intelligence.value * (1+chars.skills.trained.value/100) end)
-	Event.subscribe(chars.baseChar.constitution, 'maxValue', function() chars.finalChar.energy.maxValue = chars.baseChar.intelligence.maxValue * (1 +chars.skills.trained.maxValue/100) end)
+	Event.subscribe(chars.baseChar.constitution, 'value',        function() chars.finalChar.energy.value = chars.baseChar.intelligence.value * (1+chars.skills.trained.value/100) end)
+	Event.subscribe(chars.baseChar.constitution, 'maxValue',     function() chars.finalChar.energy.maxValue = chars.baseChar.intelligence.maxValue * (1 +chars.skills.trained.maxValue/100) end)
 
 	Event.subscribe(chars.baseChar.strength, 	 'value',        function() chars.finalChar.attack.value    = chars.baseChar.strength.value * (1+chars.skills.closeCombat.value/100) end)
 	Event.subscribe(chars.baseChar.strength, 	 'maxValue',     function() chars.finalChar.attack.maxValue = chars.baseChar.strength.maxValue * (1 +chars.skills.closeCombat.maxValue/100) end)
@@ -205,50 +205,6 @@ function M.createAllChars()
 	
 	return chars
 end
-
-
-local staticFist = {chars= {armour = {value = 10}, damage = {value = 1}, hp = {value = 10}}}
-
-function M.attack(attacker, defender)	
-	
-	if defender.__type ~= 'rock' then
-	
-
-		local weapon = attacker.body.rightHand.bpart.item.weapon or staticFist
-		print('weapon', weapon.chars.armour)
-
-		if randomGame(attacker.chars.finalChar.accuracy.value, defender.chars.finalChar.dodge.value) == 1 then
-			
-			local bpart = defender.body:chooseRandom()
-			local items = bpart.bpart.item
-			local armourBreak = weapon.chars.armour.value
-			local armour = 0
-			
-			if 		items.heavy   and items.heavy.chars.armour.value > 0  then
-				arType = 'heavy'
-				armour = items.heavy.chars.armour.value
-			elseif  items.medium  and items.medium.chars.armour.value > 0  then
-				arType = 'medium'
-				armour = items.medium.chars.armour.value
-			elseif  items.light   and items.light.chars.armour.value > 0  then
-				arType = 'light'
-				armour = items.light.chars.armour.value
-			end
-			
-			if randomGame(weapon.chars.armour.value, armour) == 1 then
-				defender.chars.finalChar.hp.value = defender.chars.finalChar.hp.value - weapon.chars.damage.value
-			else
-				Text.putMessage(string.format('%s заблокировал удар по %s', defender.name, bpart.name ))
-			end
-		else
-			Text.putMessage(string.format('%s увернулся',defender.name))
-		end
-		
-	end
-	-- print('defender ', defender.chars.finalChar.hp.value)
-	
-end
-
 
 
 

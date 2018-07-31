@@ -82,7 +82,7 @@ function getDistance(x1, y1, x2, y2)
 end
 
 function randomGame(a, b)
-	local cn = c or  math.random(1, a+b)
+	local cn = c or  math.random(1, math.ceil(a+b))
 	
 	return cn <= a and 1 or 2
 end

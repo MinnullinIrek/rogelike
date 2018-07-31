@@ -1,20 +1,10 @@
 
-
-
-
--- cdX, cdY, colorBg, colorFg
-
--- conLib.putCh("dsdf1", 10, 10, 4,16, 5)
-
--- print(xpcall(start, debug.traceback))
-
-
 print(xpcall(function()
-	package.path = package.path..";C:\\books\\roge\\rogelike\\scripts\\?.lua"
+	path = "C:\\books\\roge\\rogelike\\scripts\\"
+	package.path = string.format("%s;%s?.lua;%s?\\init.lua;", package.path, path, path)
 
-
-	local dname = "script: "
 	require 'utils'
+	local dname = "script: "
 	local function print(...) oprint(dname, ...) end
 	
 	local Char = require 'chars'
@@ -31,7 +21,7 @@ print(xpcall(function()
 	local mover   = require 'mover'
 	local item    = require 'item'
 	local Log     = require 'logus'
-	Unit    	  = require 'unit'
+	local Unit    	  = require 'unit'
 	local Item    = require 'item'
 	
 	game.hero = Unit.hero

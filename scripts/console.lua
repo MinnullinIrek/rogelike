@@ -137,8 +137,8 @@ function printHero()
 	for i, k in ipairs(chars) do
 		count = count + 1;
 		if(type(k) == 'table') then
-			local charText = string.format('%s \t %d/%d', k.name, k.value, k.maxValue)
-			
+			local charText = string.format('%s \t %3.0f/%3.0f', k.name, k.value, k.maxValue)
+
 			putCh(charText, consts.charTbl.x +5, consts.charTbl.y + count, color.DarkGray, color.Blue)  --coordX, coordY,
 		end
 	end
@@ -150,7 +150,7 @@ function printHero()
 			if wearing then
 				for tp, it in pairs(wearing) do
 					if type(it) == 'table' then
-						str = str .." "..it.chars.armour.value
+						str = str .." "..math.ceil(it.chars.armour.value)
 					end
 				end
 			end
@@ -231,7 +231,7 @@ local function showItemDescription(item)
 		local str = ''
 		for name, ch in pairs(chars) do
 			if type(ch) == 'table' and type(name) == 'string' then
-				str = string.format('%s [%s:%d]', str, name, ch.value)
+				str = string.format('%s [%s:%3.0f]', str, name, ch.value)
 			end
 		end
 		
