@@ -3,7 +3,10 @@ local M = {}
 require 'utils'
 local Text  = require 'text'
 local Event = require 'event'
+local T = require 'texts'
+
 local dname = "chars: "
+
 
 
 local function print(...) oprint(dname, ...) end
@@ -113,12 +116,13 @@ local charsInChar = {
 local charsInChar_r = 
 {
 	finalChar = {
-		'hp',
-		'cot',
-		'энергия',
-		'атака',
-		'увертливость',
-		'точность',
+		T.hp,
+		T.cot,
+		T.energy,
+		T.attack,
+		T.dodge,
+		T.accuracy,
+		
 	}, 
 	itemChar = {
 		'броня',

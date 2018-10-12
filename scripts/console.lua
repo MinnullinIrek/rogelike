@@ -377,7 +377,7 @@ local chardirection =
 			putCh(charValue.name, x, 1)
 			for i, value in ipairs(charValue.value) do
 				if type(value) == 'table' then
-					putCh(string.format('%s    %2d/%2d', value.name, value.value or 0, value.maxValue or 0), x, i + j)
+					putCh(string.format('%s    %2d/%2d', value.name, math.ceil(value.value) or 0, math.ceil(value.maxValue) or 0), x, i + j)
 				end
 			end
 			x = x + 30

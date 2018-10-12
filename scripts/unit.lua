@@ -12,7 +12,7 @@ local Chars 	= require 'chars'
 local Event     = require 'event'
 local text 		= require 'text'
 local Log       = require 'logus'
-
+local T			= require 'texts'
 
 local rockSymb = '#'
 
@@ -112,11 +112,11 @@ function createMob(name, ch, utype)
 																elseif val > 0.1 * maxV then
 																	level = 'фатально'
 																end
-																text.putMessage(string.format('%s получил %s раненение', mob.name, level))
+																text.putMessage(string.format(T.get_damage, mob.name, level))
 															elseif val > maxV then
-																text.putMessage(string.format('ОГО, %s раскачался ', mob.name))
+																text.putMessage(string.format(T.ogo, mob.name))
 															elseif val < 0 then
-																text.putMessage('он уже мёртв')
+																text.putMessage(T.already_dead)
 															end
 															
 														

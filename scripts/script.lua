@@ -23,6 +23,7 @@ print(xpcall(function()
 	local Log     = require 'logus'
 	local Unit    	  = require 'unit'
 	local Item    = require 'item'
+	local T   	= require 'texts'
 	
 	game.hero = Unit.hero
 	
@@ -35,15 +36,15 @@ print(xpcall(function()
 			unit.body:wear(item)
 		end
 		
-		setItem('кираса', 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 'стара€ ржава€ кираса')
+		setItem(T.cuirass, 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 'стара€ ржава€ кираса')
 		setItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2, 100}}), 'меч покрыт толстым слоем ржавчины')
-		setItem('средний шлем', 'Ќ', 'armour', {medium = true}, {head=true, neck = true}, Char.createChar('itemChar', {value = {100,  40, 100}}), 'шлем покрытый волнистыми узорами')
+		setItem(T.helm, 'Ќ', 'armour', {medium = true}, {head=true, neck = true}, Char.createChar('itemChar', {value = {100,  40, 100}}), 'шлем покрытый волнистыми узорами')
 		
-		setItem('перчатка', 'ѕ', 'armour', {light = true}, {leftHand=true, leftArm = true}, Char.createChar('itemChar', {value = {100, 20, 100}}), 'длинна€ перчаточка')
-		setItem('железна€ перчатка', 'J', 'armour', {hevy = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 70, 100}}), 'т€жЄла€ металлическа€ пречатка')
+		setItem(T.glove, T.P, 'armour', {light = true}, {leftHand=true, leftArm = true}, Char.createChar('itemChar', {value = {100, 20, 100}}), 'длинна€ перчаточка')
+		setItem(T.iron_glove, 'J', 'armour', {hevy = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 70, 100}}), 'т€жЄла€ металлическа€ пречатка')
 		
-		setItem('кожаный сапог', 'B', 'armour', {medium = true}, {leftLeg=true, leftFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 	'обычный сапог')
-		setItem('кожаный сапог', 'B', 'armour', {medium = true}, {rightLeg=true, rightFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 			'обычный сапог')
+		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {leftLeg=true, leftFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 	'обычный сапог')
+		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {rightLeg=true, rightFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 			'обычный сапог')
 		
 		
 				

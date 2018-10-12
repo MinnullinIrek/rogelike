@@ -2,6 +2,7 @@
 local serial = 0
 local tname = 'utils'
 tnil = {}
+fnil = function() end
 
 function nextSerial()
 	serial = serial + 1;
@@ -145,3 +146,41 @@ function testRandom()
 end
 
 
+function debg(fprint)
+	fprint = fprint or fnil
+	str = ''
+	local funcNum = 4 
+	TLoc={}
+	local tblf = debug.getinfo (funcNum)
+	while tblf.name do
+		TLoc[funcNum] = {func = tblf}
+		funcNum = funcNum + 1
+		debug.getinfo (funcNum, 'n')
+		
+		local i = 1
+		local name, value = debug.getlocal(funcNum, i)
+		
+		while name do 
+			TLoc[funcNum-1][name] =  value
+			i = i + 1
+			name, value = debug.getlocal(funcNum, i)
+		end
+	end
+	
+	while funcNum > 4 do
+		funcNum = funcNum - 1
+		fprint(TLoc[funcNum][func][name], '\n_________________________________')
+		str = str..'    '
+		local fpt = function(...) fprint(str, ...) end
+		
+		
+		if TLoc[funcNum] then
+			foreach(TLoc[funcNum], fprint)
+		end
+
+		fprint('\n_________________________________')
+		
+	end
+
+	debug.debug()
+end

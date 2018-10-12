@@ -7,6 +7,7 @@ local function print(...) oprint(dname, ...) end
 local tnil = {}
 local Log = require 'logus'
 local Item = require "item"
+local T = require 'texts'
 
 local wearing = {--[[light, middle, heavy, weapon]]
 	__type 		= 'wearing',
@@ -125,23 +126,23 @@ function M.createBody()
 	local body = setmetatable(
 	{
 		id = nextSerial(),
-
-		[1]  = {bpart			= createBodyPart('head'),	   	name = 'голова',	},
-		[2]  = {bpart			= createBodyPart('neck'),	 	name = 'шея',		},
-		[3]  = {bpart        	= createBodyPart('shoulder'),	name = 'л. плечо',	},
-		[4]  = {bpart         	= createBodyPart('shoulder'),	name = 'п. плечо',	},
-		[5]  = {bpart   		= createBodyPart('arm'),		name = 'л. рука',	},
-		[6]  = {bpart	 		= createBodyPart('arm'),		name = 'п. рука',	},
-		[7]  = {bpart    		= createBodyPart('hand'),		name = 'л. кисть',	},
-		[8]  = {bpart     		= createBodyPart('hand'),		name = 'п. кисть',	},
-		[9]  = {bpart          	= createBodyPart('brest'),		name = 'грудь',		},
-		[10] = {bpart			= createBodyPart('belt'),		name = 'поясница',	},
-		[11] = {bpart   		= createBodyPart('hip'),		name = 'л. бедро',	},
-		[12] = {bpart    		= createBodyPart('hip'),		name = 'п. бедро',	},
-		[13] = {bpart   		= createBodyPart('leg'),		name = 'л. нога',	},
-		[14] = {bpart    		= createBodyPart('leg'),		name = 'п. нога',	},
-		[15] = {bpart    		= createBodyPart('foot'),		name = 'л. ступня',	},
-		[16] = {bpart     		= createBodyPart('foot'),		name = 'п. ступня',	},		
+	
+		[1]  = {bpart			= createBodyPart('head'),	   	name = T.head,	},
+		[2]  = {bpart			= createBodyPart('neck'),	 	name = T.neck,		},
+		[3]  = {bpart        	= createBodyPart('shoulder'),	name = T.lshoulder,	},
+		[4]  = {bpart         	= createBodyPart('shoulder'),	name = T.rshoulder,	},
+		[5]  = {bpart   		= createBodyPart('arm'),		name = T.larm,	},
+		[6]  = {bpart	 		= createBodyPart('arm'),		name = T.rarm,	},
+		[7]  = {bpart    		= createBodyPart('hand'),		name = T.lhand,	},
+		[8]  = {bpart     		= createBodyPart('hand'),		name = T.rhand,	},
+		[9]  = {bpart          	= createBodyPart('brest'),		name = T.brest,	},
+		[10] = {bpart			= createBodyPart('belt'),		name = T.belt,	},
+		[11] = {bpart   		= createBodyPart('hip'),		name = T.lhip,	},
+		[12] = {bpart    		= createBodyPart('hip'),		name = T.rhip,	},
+		[13] = {bpart   		= createBodyPart('leg'),		name = T.lleg,	},
+		[14] = {bpart    		= createBodyPart('leg'),		name = T.rleg,	},
+		[15] = {bpart    		= createBodyPart('foot'),		name = T.lfoot,	},
+		[16] = {bpart     		= createBodyPart('foot'),		name = T.rfoot,	},		
 	}, metaBody)
 	
 	

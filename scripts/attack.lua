@@ -1,7 +1,8 @@
 local M = {}
 local Text = require 'text'
 local Item = require 'item'
-local staticFist = {chars= {armour = {value = 10}, damage = {value = 1}, hp = {value = 10}}, name = 'кулак'}
+local T = require 'texts'
+local staticFist = {chars= {armour = {value = 10}, damage = {value = 1}, hp = {value = 10}}, name = T.fist}
 
 M.attack = function(attacker, defender)	
 	
@@ -22,7 +23,10 @@ M.attack = function(attacker, defender)
 			local attackerArmourBreak = weapon.chars.armour.value
 			local weaponDamage = weapon.chars.damage.value
 			
-			Text.putMessage(string.format('%s получил удар %sм в %s', defender.name, weapon.name, bpart.name  ))
+			Text.putMessage(
+				string.format('%s %s %s%s %s %s',
+					
+					defender.name, T.get_strike, weapon.name, T.m, T.to, bpart.name  ))
 			
 			for i, armourType in ipairs(Item.armour.armourTypes) do
 				if breacked and items[armourType] and items[armourType].chars.armour.value then
@@ -35,7 +39,7 @@ M.attack = function(attacker, defender)
 						weaponDamage = weaponDamage *(1 - armour.chars.damage.value / 100)
 						armour.chars.hp.value = armour.chars.hp.value - adsorbed
 					else
-						Text.putMessage(string.format('%s заблокировал удар по %s', defender.name, items[armourType].name ))
+						Text.putMessage(string.format('%s %s %s', defender.name, T.blockedBy ,items[armourType].name ))
 						breacked = false
 					end
 				end				
@@ -47,7 +51,7 @@ M.attack = function(attacker, defender)
 			end
 			
 		else
-			Text.putMessage(string.format('%s увернулся',defender.name))
+			Text.putMessage(string.format('%s %s', T.dodged,defender.name))
 		end
 		
 	end
