@@ -30,9 +30,7 @@ local map = {
 			unit.mover.coords.y = column
 			unit.mover.map = self
 		end
-	end
-	
-	
+	end	
 }
 
 map.__index = map
@@ -89,7 +87,11 @@ function M.createMap(mapName,rowCount, colCount)
 	return loadLevel(1)
 end
 
-M.map = M.createMap('first', 100, 100 )
+function M.createEmptyMap(rowCount, colCount)
+	return setmetatable({rowCount = rowCount, colCount=colCount, cells = {}}, map)
+end
+
+-- M.map = M.createMap('first', 100, 100 )
 
 local u = Unit.createRock()
 

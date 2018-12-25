@@ -9,6 +9,7 @@ local Unit = require 'unit'
 local Text = require 'text'
 local Log  = require 'logus'
 local Mover = require 'mover'
+assert(map.map, "no map")
 
 function traceTable(t, fpairs)
 	fpairs = fpairs or ipairs
@@ -62,7 +63,7 @@ local function putTbl(tbl, coordX, coordY)
 	putCh(tbl.text, coordX, coordY, tbl.colorBg, tbl.colorFg);
 end
 
-putCh("хвв\nапп", 1, 1, color.Yellow, color.DarkGray)
+
 changeBuffer();
 
 function drawTable(tblDir)
@@ -305,7 +306,7 @@ mapDirection =
 	end
 }
 
-mapDirection.update()
+-- mapDirection.update()
 inventoryDirection = 
 {
 	start = 1,
@@ -365,6 +366,49 @@ inventoryDirection =
 	end
 }
 
+local questionDirection = 
+{
+
+
+	start = 1,
+	-- dir = question
+	update = function(self)
+		-- Log.putMessage("iiiiiiiiiiiiiiiiiiii")
+		local bag = nil
+		assert(self.dir, 'dir is nil')
+		assert(self.dir.text, 'dir.text is nil')
+		
+		
+		putCh(dir.text, 0, 0)		
+	end,
+	
+	dirHandle = function(self, dir)
+		
+		if dir == 'up' and self.start > 1 then
+			self.start = self.start - 1
+		elseif dir == 'down' then
+			self.start = self.start + 1
+		elseif dir == 'enter' then
+			Log.putMessage('enter')
+			if self.dir == 'i' then
+				Unit.hero.body:wear(self.selectedItem)
+			elseif self.dir == 'p' then
+				local bag = self:getCellBag()
+				local item = table.remove(bag,start)
+				table.insert(self:getHeroBag(), item)
+			end
+		elseif dir == 'd' and self.dir == 'i' then
+			Log.putMessage("dirHandle ".. dir)
+			Log.putMessage("dirHandle 'd'")
+			local cellBag = self:getCellBag()
+			local heroBag = self:getHeroBag()
+			Unit.hero.body:unWear(self.selectedItem)
+			table.insert(cellBag, table.remove(heroBag, self.start ))
+			
+		end
+	end
+}
+
 local chardirection = 
 {
 	start = 1,
@@ -392,12 +436,13 @@ local chardirection =
 	end
 }
 
-M.Activer = mapDirection
+M.Activer = nil --mapDirection
 
 local directions = {
 	map   = mapDirection,
 	bag   = inventoryDirection,
 	chars = chardirection,
+	question = questionDirection,
 	
 }
 

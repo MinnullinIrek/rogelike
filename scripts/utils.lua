@@ -83,9 +83,28 @@ function getDistance(x1, y1, x2, y2)
 end
 
 function randomGame(a, b)
-	local cn = c or  math.random(1, math.ceil(a+b))
+	local cn = math.random(1, math.ceil(a+b))
 	
 	return cn <= a and 1 or 2
+end
+
+function randomGame2(...)
+	local t = {...}
+	local sum = 0;
+	for i, k in ipairs(t) do
+		sum = sum + k
+		t[i] = sum		
+	end
+	
+	local cn = math.random(1, sum)
+	
+	for i, k in ipairs(t) do
+		if cn < k then
+			return i
+		end
+		
+	end
+
 end
 
 function randomTbl(tbl)

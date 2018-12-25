@@ -104,13 +104,13 @@ function createMob(name, ch, utype)
 														else
 															if val < maxV and val > 0 then
 																if val > 0.6 * maxV then
-																	level = 'легкое'
+																	level = 'legko'
 																elseif val > 0.3 * maxV then
-																	level = 'среднее'
+																	level = 'sredne'
 																elseif val > 0.2 * maxV then
-																	level = 'тяжело'
+																	level = 'tyajelo'
 																elseif val > 0.1 * maxV then
-																	level = 'фатально'
+																	level = 'fatalno'
 																end
 																text.putMessage(string.format(T.get_damage, mob.name, level))
 															elseif val > maxV then

@@ -16,6 +16,7 @@ print(xpcall(function()
 	print("print before", tname)
 	local Dir     = require 'direction'
 	local map     = require 'map'
+	local mapCreator = require 'MapCreator'
 	console       = require 'console'
 	
 	local mover   = require 'mover'
@@ -24,6 +25,7 @@ print(xpcall(function()
 	local Unit    	  = require 'unit'
 	local Item    = require 'item'
 	local T   	= require 'texts'
+	local story = require 'story'
 	
 	game.hero = Unit.hero
 	
@@ -36,19 +38,19 @@ print(xpcall(function()
 			unit.body:wear(item)
 		end
 		
-		setItem(T.cuirass, 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 'стара€ ржава€ кираса')
-		setItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2, 100}}), 'меч покрыт толстым слоем ржавчины')
-		setItem(T.helm, 'Ќ', 'armour', {medium = true}, {head=true, neck = true}, Char.createChar('itemChar', {value = {100,  40, 100}}), 'шлем покрытый волнистыми узорами')
+		setItem(T.cuirass, 'R', 'armour', {light = true}, {brest=true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 'staraya rjavaya kirasa')
+		setItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 2, 100}}), 'mech pokritiy tolstim sloem hjavchini')
+		setItem(T.helm, 'Ќ', 'armour', {medium = true}, {head=true, neck = true}, Char.createChar('itemChar', {value = {100,  40, 100}}), 'shlem pokritiy volnistimi uzorami')
 		
-		setItem(T.glove, T.P, 'armour', {light = true}, {leftHand=true, leftArm = true}, Char.createChar('itemChar', {value = {100, 20, 100}}), 'длинна€ перчаточка')
-		setItem(T.iron_glove, 'J', 'armour', {hevy = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 70, 100}}), 'т€жЄла€ металлическа€ пречатка')
+		setItem(T.glove, T.P, 'armour', {light = true}, {leftHand=true, leftArm = true}, Char.createChar('itemChar', {value = {100, 20, 100}}), 'dlinnaya perchatka')
+		setItem(T.iron_glove, 'J', 'armour', {hevy = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 70, 100}}), 'tyajelaya metallicheskaya perchatka')
 		
-		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {leftLeg=true, leftFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 	'обычный сапог')
-		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {rightLeg=true, rightFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 			'обычный сапог')
+		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {leftLeg=true, leftFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 	'obichniy sapou')
+		setItem(T.skin_boot, 'B', 'armour', {medium = true}, {rightLeg=true, rightFoot = true}, Char.createChar('itemChar', {value = {100, 10, 100}}), 			'obichniy sapog')
 		
 		
 				
-		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 60}}), 'старый ржавый меч')
+		item = Item.createItem('sword', 'S', 'weapon', {weapon = true}, {rightHand=true, rightArm = true}, Char.createChar('itemChar', {value = {100, 60}}), 'stariy rjaviy mech')
 		
 		local cell = map.map:getCell(5,5)
 		
@@ -60,6 +62,8 @@ print(xpcall(function()
 	end
 	
 	setTestItem(Unit.hero, Item)
+	
+	console.changeRejim('question', story.startQuestion)
 	
 	local i = 0
 	 while i ~= 32 do
