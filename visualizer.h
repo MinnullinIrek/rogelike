@@ -40,7 +40,7 @@ class Visualizer
 public:
     explicit Visualizer();
     void changeBuffer();
-    void putchar(const char text[], int count, short cdx, short cdy, int bg, int fg);
+    void putchar(const char ch[], int count, short cdx, short cdy, int bg, int fg);
     void setMainBuffer(int val);
 //signals:
     void toPut();//const VisObject & visObject
@@ -52,27 +52,19 @@ public:
 
 extern Visualizer con;
 
-void put(const char * ch, int cdx, int cdy, int colorBg = 0, int colorFg = 15);
+void put(const char *ch, int cdx, int cdy, int colorBg = 0, int colorFg = 15);
 
 static int l_putCh (lua_State *L) {
     const char * ch = (lua_tostring(L,1));
-    int  cdX = lua_tointeger(L,2);
-    int  cdY = lua_tointeger(L,3);
+    auto  cdX = lua_tointeger(L,2);
+    auto cdY = lua_tointeger(L,3);
 
-    int colorBg = lua_tointeger(L, 4);
-    int colorFg = lua_tointeger(L, 5);
+    auto colorBg = lua_tointeger(L, 4);
+    auto colorFg = lua_tointeger(L, 5);
     //int count   = lua_tointeger(L, 6);
-    int len = strlen(ch);
+    auto len = strlen(ch);
 
-//    wchar_t  wch[len];
 
-//    for(int i =0; i< len; i++) {
-//        wch[i] = (wchar_t)ch[i];
-//    }
-
-    //mbstowcs (wch, ch, len);
-
-//    std::string s = wstrtostr(utf8_decode(ch));
 
     con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
 

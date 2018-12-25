@@ -1,5 +1,5 @@
 #include "visualizer.h"
-
+#include <iostream>
 
 /* Standard error macro for reporting API errors */
 #define PERR(bSuccess, api){if(!(bSuccess)) printf("%s:Error %d from %s \
@@ -62,6 +62,8 @@ std::string wstrtostr(const std::wstring &wstr)
 void SetColor(HANDLE h, Color text, Color background);
 Visualizer::Visualizer()
 {
+    setlocale(LC_ALL,"Russian");
+
      firstConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     for (auto & ihandle : handles)
             ihandle = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, nullptr, CONSOLE_TEXTMODE_BUFFER, nullptr);;
@@ -115,14 +117,31 @@ void Visualizer::setActiveBuffer(HANDLE h)
 
 
 
-
-
-void Visualizer::putchar(const char text[], int count, short cdx, short cdy, int bg, int fg)//const VisObject & visObject
+// Convert an UTF8 string to a wide Unicode String
+std::wstring utf8_decode(const std::string &str)
 {
+    if( str.empty() ) return std::wstring();
+    auto size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+    std::wstring wstrTo( size_needed, 0 );
+    MultiByteToWideChar                  (CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
+    return wstrTo;
+}
+
+void Visualizer::putchar(const char ch[], int count, short cdx, short cdy, int bg, int fg)//const VisObject & visObject
+{
+//    wchar_t  wch[count];
+
+//    for(int i =0; i< count; i++) {
+//        wch[i] = (wchar_t)ch[i];
+//    }
+
+//    mbstowcs (wch, ch, count);
+
+//    std::string s = wstrtostr(utf8_decode(ch));
     COORD cd = {cdx, cdy};
+    auto wch = utf8_decode(ch);
 
-
-    WriteConsoleOutputCharacterA(*handle, text, count, cd, logD2);
+    WriteConsoleOutputCharacterW(*handle, wch.c_str(), count, cd, logD2);
     WORD wColors =  (static_cast<WORD>(bg) << 4) | static_cast<WORD>(fg);//(fg | bg);
 
     for(int i = 0; i < count; i++, cd.X++){
@@ -138,18 +157,18 @@ void SetColor(HANDLE h, Color text, Color background)
     SetConsoleTextAttribute(h, (static_cast<WORD>(background) << 4) | static_cast<WORD>(text));
 }
 
-void put(const char * ch, int cdx, int cdy, int colorBg , int colorFg )
+void put(const char *ch, int cdx, int cdy, int colorBg , int colorFg )
 {
-    int len = strlen(ch);
-    wchar_t  wch[len];
+    auto len = strlen(ch);
+//    wchar_t  wch[len];
 
-    for(int i =0; i< len; i++) {
-        wch[i] = (wchar_t)ch[i];
-    }
+//    for(int i =0; i< len; i++) {
+//        wch[i] = (wchar_t)ch[i];
+//    }
 
     //mbstowcs (wch, ch, len);
 
-    std::string s = wstrtostr(utf8_decode(ch));
-    con.putchar(s.c_str(), len, cdx, cdy, colorBg, colorFg);
+    //std::string s = wstrtostr(utf8_decode(ch));
+    con.putchar(ch, len, cdx, cdy, colorBg, colorFg);
 }
 

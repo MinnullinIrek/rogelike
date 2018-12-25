@@ -67,23 +67,15 @@ std::string utf8_encode(const std::wstring &wstr)
     return strTo;
 }
 
-// Convert an UTF8 string to a wide Unicode String
-std::wstring utf8_decode(const std::string &str)
-{
-    if( str.empty() ) return std::wstring();
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-    std::wstring wstrTo( size_needed, 0 );
-    MultiByteToWideChar                  (CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-    return wstrTo;
-}
+
 
 
 
 int main(int argc, char *argv[])
 {
-
-    SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
-    SetConsoleOutputCP(1251);
+    setlocale(LC_ALL,"Russian");
+//    SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
+//    SetConsoleOutputCP(1251);
 
 
     lua_State *L = luaL_newstate();
