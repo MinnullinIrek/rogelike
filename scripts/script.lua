@@ -63,7 +63,7 @@ print(xpcall(function()
 	
 	setTestItem(Unit.hero, Item)
 	
-	console.changeRejim('question', story.startQuestion)
+	console.changeRejim('question', story.startQuestions)
 	
 	local i = 0
 	 while i ~= 32 do

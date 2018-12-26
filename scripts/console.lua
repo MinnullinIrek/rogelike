@@ -372,39 +372,35 @@ local questionDirection =
 
 	start = 1,
 	-- dir = question
+	-- currentQuestion = 1
 	update = function(self)
-		-- Log.putMessage("iiiiiiiiiiiiiiiiiiii")
+		self.currentQuestion = self.currentQuestion or 1
 		local bag = nil
 		assert(self.dir, 'dir is nil')
-		assert(self.dir.text, 'dir.text is nil')
+		assert(self.dir[self.currentQuestion], 'dir.text is nil')
+		assert(self.dir[self.currentQuestion].text, 'dir.text is nil')
+		putCh(self.dir[self.currentQuestion].text , 0, 0)
 		
+		for i, tbl in ipairs(self.dir[self.currentQuestion].choises) do
+			putCh(string.format('[%s] %s', (self.start == i) and '#' or ' ', tbl.text), 5, i)
+		end
 		
-		putCh(dir.text, 0, 0)		
+		changeBuffer()
 	end,
 	
 	dirHandle = function(self, dir)
-		
 		if dir == 'up' and self.start > 1 then
 			self.start = self.start - 1
 		elseif dir == 'down' then
-			self.start = self.start + 1
-		elseif dir == 'enter' then
-			Log.putMessage('enter')
-			if self.dir == 'i' then
-				Unit.hero.body:wear(self.selectedItem)
-			elseif self.dir == 'p' then
-				local bag = self:getCellBag()
-				local item = table.remove(bag,start)
-				table.insert(self:getHeroBag(), item)
+			if self.start ~= #self.dir[self.currentQuestion].choises then
+				self.start = self.start + 1
 			end
-		elseif dir == 'd' and self.dir == 'i' then
-			Log.putMessage("dirHandle ".. dir)
-			Log.putMessage("dirHandle 'd'")
-			local cellBag = self:getCellBag()
-			local heroBag = self:getHeroBag()
-			Unit.hero.body:unWear(self.selectedItem)
-			table.insert(cellBag, table.remove(heroBag, self.start ))
-			
+		elseif dir == 'enter' then
+			self.dir[self.currentQuestion].choises[self.start].activator()
+			self.currentQuestion = self.currentQuestion + 1
+			if self.currentQuestion > #self.dir then
+				M.changeRejim('map')
+			end
 		end
 	end
 }

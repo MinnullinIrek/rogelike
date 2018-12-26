@@ -21,13 +21,34 @@ local function print(...) oprint(dname, ...) end
 		-- (Choise ){ text = '' , activator = function() end},
 	-- }
 -- }
-
-	M.startQuestion = {
-		text = 'выберите пол',
-		choises = {
-			{text = 'М', activator = function() Unit.hero.sex = 'male' end},
-			{text = 'Ж', activator = function() Unit.hero.sex = 'female' end},
-			{text = 'С', activator = function() Unit.hero.sex = 'none' end},
+	Unit.hero.past = {}
+	M.startQuestions = {
+		{
+			text = 'выберите пол',
+			choises = {
+				{text = 'М', activator = function() Unit.hero.past.sex = 'male' end},
+				{text = 'Ж', activator = function() Unit.hero.past.sex = 'female' end},
+				{text = 'С', activator = function() Unit.hero.past.sex = 'none' end},
+			}
+		},
+		{
+			text = 'выберите происхождение',
+			choises = {
+				{text = 'отпрыск магистра. все дороги открыты, карьера магистра обеспечена', activator = function() end },
+				{text = 'королевский бастард. много папиного золота. профессиональное обучение.', activator = function() end },
+				{text = 'дворянин.', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				{text = '', activator = function() end },
+				
+				
+				
+			}
 		}
 	}
 
