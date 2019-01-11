@@ -66,6 +66,7 @@ static int l_putCh (lua_State *L) {
 
 
 
+
     con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
 
     return 0;

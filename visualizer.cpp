@@ -141,7 +141,7 @@ void Visualizer::putchar(const char ch[], int count, short cdx, short cdy, int b
     COORD cd = {cdx, cdy};
     auto wch = utf8_decode(ch);
 
-    WriteConsoleOutputCharacterW(*handle, wch.c_str(), count, cd, logD2);
+    WriteConsoleOutputCharacterW(*handle, wch.c_str(), wch.length(), cd, logD2);
     WORD wColors =  (static_cast<WORD>(bg) << 4) | static_cast<WORD>(fg);//(fg | bg);
 
     for(int i = 0; i < count; i++, cd.X++){

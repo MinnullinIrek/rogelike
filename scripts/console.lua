@@ -372,17 +372,29 @@ local questionDirection =
 
 	start = 1,
 	-- dir = question
-	-- currentQuestion = 1
+	currentQuestion = 1,
 	update = function(self)
-		self.currentQuestion = self.currentQuestion or 1
 		local bag = nil
 		assert(self.dir, 'dir is nil')
 		assert(self.dir[self.currentQuestion], 'dir.text is nil')
 		assert(self.dir[self.currentQuestion].text, 'dir.text is nil')
-		putCh(self.dir[self.currentQuestion].text , 0, 0)
+		local choiseRow = 0
 		
-		for i, tbl in ipairs(self.dir[self.currentQuestion].choises) do
-			putCh(string.format('[%s] %s', (self.start == i) and '#' or ' ', tbl.text), 5, i)
+		while  self.dir[self.currentQuestion].ifFunc() == false do
+			self.currentQuestion = self.currentQuestion + 1
+			if (self.currentQuestion > #self.dir ) then
+				M.changeRejim('map')
+				return
+			end
+		end
+		
+		for j, text in ipairs(self.dir[self.currentQuestion].text) do
+			putCh(text , 0, j)
+			choiseRow = j
+		end
+		
+		for i, tbl in ipairs(self.dir[self.currentQuestion].choises) do			
+			putCh(string.format('[%s] %s', (self.start == i) and '#' or ' ', tbl.text), 5, i + choiseRow)
 		end
 		
 		changeBuffer()
