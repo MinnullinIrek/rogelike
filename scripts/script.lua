@@ -1,5 +1,8 @@
 
 print(xpcall(function()
+	
+	oldPrint = print
+	
 	path = "C:\\books\\roge\\rogelike\\scripts\\"
 	package.path = string.format("%s;%s?.lua;%s?\\init.lua;", package.path, path, path)
 
@@ -16,18 +19,30 @@ print(xpcall(function()
 	print("print before", tname)
 	local Dir     = require 'direction'
 	local map     = require 'map'
+	oldPrint("script")
+	local Unit    	  = require 'unit'
 	local mapCreator = require 'MapCreator'
-	console       = require 'console'
+	
 	
 	local mover   = require 'mover'
 	local item    = require 'item'
 	local Log     = require 'logus'
-	local Unit    	  = require 'unit'
+	
 	local Item    = require 'item'
 	local T   	= require 'texts'
-	local story = require 'story'
+	
+	
+	Unit.createHero()
 	
 	game.hero = Unit.hero
+
+	local story = require 'story'
+	-- oldPrint(string.format("game.hero = %s", game.hero))
+	-- oldPrint(string.format("Unit.hero = %s", Unit.hero))
+	
+	assert(game.hero == Unit.hero, "epic fale")
+	-- mapCreator.create()
+	console       = require 'console'
 	
 	function setTestItem(unit, Item)
 		
@@ -62,6 +77,8 @@ print(xpcall(function()
 	end
 	
 	setTestItem(Unit.hero, Item)
+	
+	assert(game.hero == Unit.hero, "epic fale")
 	
 	console.changeRejim('question', story.startQuestions)
 	

@@ -44,8 +44,7 @@ HEADERS += \
     visualizer.h \
     glwidget.h
 
-FORMS += \
-        mainwindow.ui
+FORMS +=
 
 win32: LIBS += -L$$PWD/../../../lua/ -llua53
 

@@ -95,7 +95,7 @@ end
 
 local u = Unit.createRock()
 
-assert(Unit.hero, "Unit.hero is nil")
+-- assert(Unit.hero, "Unit.hero is nil")
 
 -- M.map:setUnit(4, 4, Unit.hero)
 

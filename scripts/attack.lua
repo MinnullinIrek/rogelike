@@ -25,7 +25,6 @@ M.attack = function(attacker, defender)
 			
 			Text.putMessage(
 				string.format('%s %s %s%s %s %s',
-					
 					defender.name, T.get_strike, weapon.name, T.m, T.to, bpart.name  ))
 			
 			for i, armourType in ipairs(Item.armour.armourTypes) do

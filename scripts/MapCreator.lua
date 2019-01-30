@@ -2,7 +2,7 @@ local M = {}
 
 local Map = require 'map'
 require 'utils'
-local Unit = require 'Unit'
+local Unit = require 'unit'
 local Game = require 'game'
 
 trock = Unit.createRock()
