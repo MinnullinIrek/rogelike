@@ -18,7 +18,7 @@ local Cell =
 	getChar = function(self)
 		if self.visible == 1 then
 			if self.unit then
-				return {text = self.unit.ch, colorFg = (self.visible == 1) and color.White or color.LightGray}
+				return {text = self.unit.ch, colorFg = (self.visible == 1) and (self.unit.colorFg or color.White) or color.LightGray}
 			elseif self.bag and #self.bag > 0 then
 				return {text = '$', colorFg = color.Yellow}
 			end

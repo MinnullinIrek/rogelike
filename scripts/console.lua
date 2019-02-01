@@ -9,6 +9,8 @@ local Unit = require 'unit'
 local Text = require 'text'
 local Log  = require 'logus'
 local Mover = require 'mover'
+local Timer = require 'timer'
+
 assert(map.map, "no map")
 
 function traceTable(t, fpairs)

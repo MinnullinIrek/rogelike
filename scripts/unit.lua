@@ -13,6 +13,8 @@ local Event     = require 'event'
 local text 		= require 'text'
 local Log       = require 'logus'
 local T			= require 'texts'
+local Timer     = require 'timer'
+require 'utils'
 
 local rockSymb = '#'
 
@@ -67,13 +69,15 @@ function M.createRock()
 end
 
 
-function createMob(name, ch, utype)
+function createMob(name, ch, utype, color)
 	local mob = setmetatable(
 			{
 				name  = name, 
 				ch    = ch, 
 				utype = utype, 
-				chars = Chars.createAllChars()
+				chars = Chars.createAllChars(),
+				-- colourFg = color.Red,
+				colorFg = color,
 				
 			},
 		Unit)
@@ -118,29 +122,26 @@ function createMob(name, ch, utype)
 															elseif val < 0 then
 																text.putMessage(T.already_dead)
 															end
-															
-														
-														
-															
-															-- print('unit.mover', unit.mover)
-															
-															-- unit = nil
 														end
 													end )
-	
 	return mob
 end
 
 
 function M.createHero()
-	local hero = createMob('hero', '@', 'hero')
+	local hero = createMob('hero', '@', 'hero', color.LightBlue)
 	hero.body = Body.createBody()
+	hero.timer = 
+		function(time)
+			Timer.addTime(time)
+		end
+		
 	return hero
 	
 end
 
 function M.createEnemy(name, ch, utype)
-	local mob = createMob(name, ch, utype)
+	local mob = createMob(name, ch, utype, color.LightRed)
 	Mover.createMover(mob)
 	mob.step = function(self)
 		local x, y = self.mover.coords.x, self.mover.coords.y
@@ -166,6 +167,9 @@ function M.createEnemy(name, ch, utype)
 	end
 	mob.body = Body.createBody()
 	ai.mobs[mob] = true
+	mob.timer = function(time)
+					
+				end
 	return mob
 end
 

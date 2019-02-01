@@ -52,6 +52,7 @@ function createHeroMover()
 	mover.jumpTo = 	function(self, x, y) 
 						self.unit:setVisibility(false)
 						Mover.jumpTo(self, x, y)
+						
 						self.unit:setVisibility(true)
 					end
 	return mover

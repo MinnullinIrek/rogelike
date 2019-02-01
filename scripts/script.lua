@@ -84,7 +84,6 @@ print(xpcall(function()
 	
 	local i = 0
 	 while i ~= 32 do
-	 
 		i = console.getCh()
 		local dir = Dir.direction[i]
 		if dir == 'i' or dir == 'p' then
@@ -97,8 +96,6 @@ print(xpcall(function()
 			console.mainScreen(1)
 			-- i = 32
 			local s = "enter"
-			
-
 			s =io.read()
 			while s ~= 'exit' do
 				-- print("s = ", s)
@@ -108,6 +105,8 @@ print(xpcall(function()
 			end
 			console.mainScreen(0)
 			conLib.changeBuffer();
+		elseif dir == 'l' then
+			
 		else
 			console.Activer:dirHandle(dir)
 		end

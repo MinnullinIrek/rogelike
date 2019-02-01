@@ -1,6 +1,8 @@
 ﻿local M ={}
-local dname = "Timer: "
 
+local Queue = nil
+
+local dname = "Timer: "
 local function print(...) oprint(dname, ...) end
 
 require 'utils'
@@ -8,7 +10,12 @@ require 'utils'
 M.ms = 0
 
 function M.addTime(ms)
-    M.ms = ms
+    M.ms = M.ms + ms
+	Queue.activate()
+end
+
+function M.setQueue(queue)
+	Queue = queue	
 end
 
 function M.getStr()
