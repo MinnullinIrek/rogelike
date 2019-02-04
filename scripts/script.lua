@@ -30,6 +30,8 @@ print(xpcall(function()
 	
 	local Item    = require 'item'
 	local T   	= require 'texts'
+	local Queue = require 'queue'
+	local Timer = require 'timer'
 	
 	
 	Unit.createHero()

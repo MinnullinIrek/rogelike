@@ -137,6 +137,8 @@ function printHero()
 	local count = 0
 	chars = chars.finalChar
 	
+	putCh(Timer.getStr(), 52, 0, color.DarkGray, color.Blue)
+	
 	for i, k in ipairs(chars) do
 		count = count + 1;
 		if(type(k) == 'table') then

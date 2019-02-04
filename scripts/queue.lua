@@ -2,7 +2,10 @@ local M ={}
 
 local Timer = require 'timer'
 
-local Timer.setQueue(M)
+-- oldPrint("Queue$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+-- print("M.setQueue(queue)************************************************")
+
+Timer.setQueue(M)
 
 -- M.actions = {time = function() end}
 
@@ -18,7 +21,7 @@ function M.addAction(time, action)
 end
 
 function M.activate()
-	while M.actions[1].time < Timer.ms do
+	while  #M.actions > 0 and	M.actions[1].time < Timer.ms do
 		M.actions[1].action()
 		table.remove(M.actions, 1)
 	end	

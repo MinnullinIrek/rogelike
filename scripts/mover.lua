@@ -21,12 +21,28 @@ local Mover =
 		print('jumpTo')
 		local cell = self.map:getCell(x, y)
 		if not cell.unit then
-			self.map:setUnit(self.coords.x, self.coords.y, nil)
-			self.map:setUnit(x, y, self.unit)
-			self.coords.x = x
-			self.coords.y = y
+			local dist = getDistance(self.coords.x, self.coords.y, x, y)
+			local t = (500 * dist) / self.unit.chars.baseChar.dexterity.value
+
+			local function action()
+				local cell = self.map:getCell(x, y)
+				if not cell.unit then
+					self.map:setUnit(self.coords.x, self.coords.y, nil)
+					self.map:setUnit(x, y, self.unit)
+
+					self.coords.x = x
+					self.coords.y = y
+				else
+					interaction(self.unit, cell.unit)
+				end
+			end
+
+			self.unit.timer(t, action)
 		else
+			local t = (4000 ) / (self.unit.chars.skills.closeCombat and self.unit.chars.skills.closeCombat.value or 1)
+			
 			interaction(self.unit, cell.unit)
+			
 		end
 	end
 	

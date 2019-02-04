@@ -206,6 +206,8 @@ function M.createAllChars()
 	chars.baseChar.dexterity.value     	  = 10
 	chars.baseChar.dexterity.maxValue     = 10
 	
+	chars.skills.closeCombat.value = 10
+	chars.skills.closeCombat.maxValue = 10
 	
 	return chars
 end

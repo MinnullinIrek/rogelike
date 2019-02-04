@@ -14,6 +14,7 @@ local text 		= require 'text'
 local Log       = require 'logus'
 local T			= require 'texts'
 local Timer     = require 'timer'
+local Queue     = require 'queue'
 require 'utils'
 
 local rockSymb = '#'
@@ -132,8 +133,9 @@ function M.createHero()
 	local hero = createMob('hero', '@', 'hero', color.LightBlue)
 	hero.body = Body.createBody()
 	hero.timer = 
-		function(time)
+		function(time, action)
 			Timer.addTime(time)
+			action()
 		end
 		
 	return hero
@@ -146,29 +148,26 @@ function M.createEnemy(name, ch, utype)
 	mob.step = function(self)
 		local x, y = self.mover.coords.x, self.mover.coords.y
 		local perception = self.chars.baseChar.perception.value
-		
-			
 			local herox, heroy = game.hero.mover.coords.x, game.hero.mover.coords.y
-			
+
 			local dist = getDistance(x, y, herox, heroy)
 			local newX, newY = 0, 0
 			if perception >= dist then
 				if x-herox ~= 0 then
 					newX = (herox - x)/math.abs(herox - x)
 				end
-				
+
 				if y-heroy ~= 0 then
 					newY = (heroy - y)/math.abs(heroy - y)
 				end
-				
+
 				self.mover:jumpTo(x + newX, y + newY)			
 			end
-		
 	end
 	mob.body = Body.createBody()
 	ai.mobs[mob] = true
-	mob.timer = function(time)
-					
+	mob.timer = function(time, action)
+					Queue.addAction(time, action)
 				end
 	return mob
 end
