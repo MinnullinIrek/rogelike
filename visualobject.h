@@ -1,11 +1,11 @@
 #ifndef VISUALOBJECT_H
 #define VISUALOBJECT_H
-#include "string"
-
+#include <string>
+#include <windows.h>
 
 using namespace std;
 
-enum class Color {
+enum class Color : WORD {
     Black = 0,
     Blue = 1,
     Green = 2,

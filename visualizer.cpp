@@ -88,6 +88,11 @@ void Visualizer::setMainBuffer(int val)
 
 }
 
+HANDLE *Visualizer::getActiveHandler()
+{
+    return handle + ((handle == handles.begin())?1:-1);
+}
+
 void Visualizer::changeBuffer()
 {
 
@@ -152,12 +157,123 @@ void Visualizer::putchar(const char ch[], int count, short cdx, short cdy, int b
     //changeBuffer();
 }
 
+void Visualizer::putWarning(const char ch[], short posx, short posy, unsigned short w, unsigned short h)
+{
+
+    static wstring line = L"##################################################################################################################################";
+    static wstring empty = L"                                                                                                                                  ";
+
+    COORD cd = {posx, posy};
+    COORD cd1 = {(short)(posx-1), (short)(posy-1)};
+
+    auto wch = utf8_decode(ch);
+    auto maximumHeight = wch.length()/w - h;
+    auto len = wch.length();
+    auto curHandle = getActiveHandler();
+
+    WriteConsoleOutputCharacterW(*curHandle, line.c_str(), w+2, cd1, logD2);
+    cd1.Y = posy+h;
+
+    WriteConsoleOutputCharacterW(*curHandle, line.c_str(), w+2, cd1, logD2);
+    cd1.Y = posy-1;
+
+    for(int i = 0; i < h; i++) {
+        cd1.X = posx - 1;
+        cd1.Y += 1;
+        WriteConsoleOutputCharacterW(*curHandle, line.c_str(), 1, cd1, logD2);
+        cd1.X += w + 1;
+//        WriteConsoleOutputCharacterW(*curHandle, line.c_str(), 1, cd1, logD2);
+    }
+
+    auto key = 0;
+    size_t lineNum = 0;
+    do {
+        auto tempCd = cd;
+        size_t start = 0;
+        size_t iter = 0;
+        size_t currentPos = static_cast<size_t>(h*lineNum/maximumHeight);
+        do {
+            auto sub = wch.substr(start+lineNum*w, min(len - start+lineNum*w, static_cast<size_t>(w)));
+
+            WriteConsoleOutputCharacterW(*curHandle, sub.c_str(), sub.length(), tempCd, logD2);
+
+            auto tmpCd = tempCd;
+            tmpCd.X += w;
+            if(currentPos == iter)
+            {
+                WORD wColors =  (static_cast<WORD>(Color::Black) << 4) | static_cast<WORD>(Color::LightRed);//(fg | bg);
+                WriteConsoleOutputAttribute(*curHandle, &wColors, 1, tmpCd, logD2);
+                WriteConsoleOutputCharacterW(*curHandle, L"@", 1, tmpCd, logD2);
+            } else
+            {
+                WORD wColors =  (static_cast<WORD>(Color::Black) << 4) | static_cast<WORD>(Color::White);
+                 WriteConsoleOutputAttribute(*curHandle, &wColors, 1, tmpCd, logD2);
+                WriteConsoleOutputCharacterW(*curHandle, L"#", 1, tmpCd, logD2);
+            }
+
+
+            tempCd.Y += 1;
+            start += w;
+            iter++;
+        }
+        while (start < wch.length() && iter < h);
+
+
+
+        key = getch();
+        if(key == 224 || key == 0){
+            key = getch();
+        }
+
+        switch (key) {
+            case 80: //down
+            lineNum += (lineNum*w +w*h+1 < wch.length())?1:0;
+            break;
+            case 75://left
+//                lineNum -= (w*h)*((lineNum - w*h > 0)?1:0);
+            break;
+            case 72: //up
+                lineNum -= (lineNum>0)?1:0;
+            break;
+            case 77://right
+//                lineNum += (w*h)*((lineNum + 2*w*h < static_cast<int>(wch.length()))?1:0);
+            break;
+            case 73: //pgup
+//                lineNum -= (lineNum>0)?1:0;
+            break;
+            case 81: //pgdn
+//                lineNum += (w*h)*((lineNum + 2*w*h < static_cast<int>(wch.length()))?1:0);
+            break;
+            case 71://home
+                lineNum = 0;
+            break;
+
+            case 79: //end
+            break;
+            case 13: //enter
+            break;
+            case 27: //esc
+            break;
+            case 32: //space
+//                lineNum += (w*h)*(lineNum + 2*w*h < wch.length()?1:0);
+            break;
+
+            default:
+                break;
+
+        }
+    } while (key != 13 && key != 27);
+
+
+
+}
+
 void SetColor(HANDLE h, Color text, Color background)
 {
     SetConsoleTextAttribute(h, (static_cast<WORD>(background) << 4) | static_cast<WORD>(text));
 }
 
-void put(const char *ch, int cdx, int cdy, int colorBg , int colorFg )
+void put(const char *ch, short cdx, short cdy, int colorBg , int colorFg )
 {
     auto len = strlen(ch);
 //    wchar_t  wch[len];
@@ -172,3 +288,7 @@ void put(const char *ch, int cdx, int cdy, int colorBg , int colorFg )
     con.putchar(ch, len, cdx, cdy, colorBg, colorFg);
 }
 
+void putWarning(const char *ch, int posx, int posy, int h, int w )
+{
+    con.putWarning(ch, posx, posy, h, w);
+}

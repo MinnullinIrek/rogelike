@@ -22,6 +22,25 @@ std::wstring utf8_decode(const std::string &str);
 
 using namespace std;
 
+enum class Colors : short
+{
+    Black = 0,
+    Blue = 1,
+    Green = 2,
+    Cyan = 3,
+    Red = 4,
+    Magenta = 5,
+    Brown = 6,
+    LightGray = 7,
+    DarkGray = 8,
+    LightBlue = 9,
+    LightGreen = 10,
+    LightCyan = 11,
+    LightRed = 12,
+    LightMagenta = 13,
+    Yellow = 14,
+    White = 15
+};
 
 
 class Visualizer
@@ -35,12 +54,14 @@ class Visualizer
 
     void setActiveBuffer(HANDLE h);
 
-
+    HANDLE *getActiveHandler();
 
 public:
     explicit Visualizer();
     void changeBuffer();
+
     void putchar(const char ch[], int count, short cdx, short cdy, int bg, int fg);
+    void putWarning(const char ch[], short posx, short posy, unsigned short w, unsigned short h);
     void setMainBuffer(int val);
 //signals:
     void toPut();//const VisObject & visObject
@@ -52,7 +73,7 @@ public:
 
 extern Visualizer con;
 
-void put(const char *ch, int cdx, int cdy, int colorBg = 0, int colorFg = 15);
+void put(const char *ch, short cdx, short cdy, int colorBg = 0, int colorFg = 15);
 
 static int l_putCh (lua_State *L) {
     const char * ch = (lua_tostring(L,1));
@@ -86,9 +107,28 @@ static int l_getch(lua_State *L)
     return 1;
 }
 
+static int l_get(lua_State *)
+{
+    return 0;
+}
+
+static int l_showWarning(lua_State *L)
+{
+    const char * ch = (lua_tostring(L,1));
+    auto posx       = lua_tointeger(L,2);
+    auto posy       = lua_tointeger(L,3);
+    auto h          = lua_tointeger(L,4);
+    auto w          = lua_tointeger(L,5);
+
+    con.putWarning(ch, posx, posy, h, w );
+
+    return 0;
+}
+
+
 static int l_getFirstConsole(lua_State *L)
 {
-    int  val = lua_tointeger(L,1);
+    int  val = static_cast<int>(lua_tointeger(L,1));
     con.setMainBuffer(val);
     return 0;
 }
@@ -98,7 +138,7 @@ static int l_printBuffer(lua_State *L)
     lua_pushnil(L);
     while(lua_next(L, -2)){
         if(lua_type(L, -1) == LUA_TTABLE) {
-            int row = lua_tointeger(L, -2);
+            auto row = static_cast<short>(lua_tointeger(L, -2));
 
             for(int i = 1; ;i++) {
                 lua_pushinteger(L, i);
@@ -114,19 +154,19 @@ static int l_printBuffer(lua_State *L)
                     lua_pushstring(L, "colorFg");
                     lua_gettable(L, -2);
                     assert(lua_type(L, -1) == LUA_TNUMBER);
-                    int colorFg = lua_tointeger(L, -1);
+                    int colorFg = static_cast<int>(lua_tointeger(L, -1));
                     lua_pop(L, 1);
 
                     lua_pushstring(L, "colorBg");
                     lua_gettable(L, -2);
                     assert(lua_type(L, -1) == LUA_TNUMBER);
-                    int colorBg = lua_tointeger(L, -1);
+                    int colorBg = static_cast<int>(lua_tointeger(L, -1));
                     lua_pop(L, 1);
 
                     lua_pushstring(L, "col");
                     lua_gettable(L, -2);
                     assert(lua_type(L, -1) == LUA_TNUMBER);
-                    int col = lua_tointeger(L, -1);
+                    auto col = static_cast<short>(lua_tointeger(L, -1));
                     lua_pop(L, 1);
 
                     put(ch, col, row, colorBg,colorFg );
@@ -159,11 +199,13 @@ static const struct luaL_Reg conLib [] = {
     {"changeBuffer",    l_changeBuffer},
     {"getch",           l_getch},           //() => intsymb
     {"getFirsConsole",  l_getFirstConsole},
-    {"printBuffer",    l_printBuffer},
+    {"printBuffer",     l_printBuffer},
+    {"get",             l_get},
+    {"showWarning",     l_showWarning}, // text,posx, posy, h, w
 
 
 
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 

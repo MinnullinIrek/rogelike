@@ -71,7 +71,7 @@ std::string utf8_encode(const std::wstring &wstr)
 
 
 
-int main(int argc, char *argv[])
+int main(int , char **)
 {
     setlocale(LC_ALL,"Russian");
 //    SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
