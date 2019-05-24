@@ -77,6 +77,8 @@ print(xpcall(function()
 	-- oldPrint(string.format("game.hero = %s", game.hero))
 	-- oldPrint(string.format("Unit.hero = %s", Unit.hero))
 	
+	conLib.showDialog(story.starDialog)
+	
 	assert(game.hero == Unit.hero, "epic fale")
 	-- mapCreator.create()
 	console       = require 'console'

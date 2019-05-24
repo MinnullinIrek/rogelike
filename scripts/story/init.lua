@@ -349,6 +349,25 @@ local function print(...) oprint(dname, ...) end
 		
 		
 	}
-
+	
+	local dialogReplics = 
+	{
+		[1] = {
+			replic = 'выберите пол',
+			answers = {{text = 'М', activator = function() Unit.hero.past.sex = 'male'   end},
+			   {text = 'Ж', activator = function() Unit.hero.past.sex = 'female' end},
+			   {text = 'С', activator = function() Unit.hero.past.sex = 'none'   end}}},
+		
+		
+		
+	}
+	
+	M.starDialog = {
+		replic = 'выберите пол kjkkjhkhjk hklhkj jkhgkhjf fgjjhfh jkhkjhk dgdjkh jkh dkgjhk dkjghk this is the texts end.',
+			answers = { {answer = 'М', activator = function() Unit.hero.past.sex = 'male'   end},
+						{answer = 'Ж', activator = function() Unit.hero.past.sex = 'female' end},
+						{answer = 'С', activator = function() Unit.hero.past.sex = 'none'   end}}
+	}
+	
 	
 return M

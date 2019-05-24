@@ -6,6 +6,7 @@
 #include <array>
 #include <conio.h>
 #include <assert.h>
+#include <vector>
 
 extern "C" {
 # include <lua.h>
@@ -67,6 +68,7 @@ public:
 
     void putchar(const char ch[], int count, short cdx, short cdy, int bg, int fg);
     void putWarning(const char ch[], short posx, short posy, unsigned short w, unsigned short h);
+    int showDialog(const char *replic, std::vector<const char*> answers);
     void setMainBuffer(int val);
 //signals:
     void toPut();//const VisObject & visObject
@@ -74,6 +76,7 @@ public:
     //void putchar(wchar_t text[], int count, int cdx, int cdy, int bg, int fg);
 
 //const VisObject & visObject
+    void putText(wstring wreplic, size_t lineNum, short px, short py, unsigned short w, unsigned short h, bool isAnswer, bool isChecked);
 };
 
 extern Visualizer con;
@@ -130,10 +133,29 @@ static int l_showWarning(lua_State *L)
     return 0;
 }
 
-static int l_showDialog(lua_State *)
+static int l_showDialog(lua_State *L)
 {
-
-
+    std::vector<const char*> answers;
+    lua_pushstring(L, "replic");
+    lua_gettable(L, -2);
+    if(lua_type(L, -1) == LUA_TSTRING) {
+        auto replic = lua_tostring(L, -1);
+        lua_pop(L, 1);
+        lua_pushstring(L, "answers");
+        lua_gettable(L, -2);
+        lua_pushnil(L);
+        while(lua_next(L, -2)){
+            if(lua_type(L, -1) == LUA_TTABLE) {
+                lua_pushstring(L, "answer");
+                lua_gettable(L, -2);
+                answers.push_back(lua_tostring(L, -1));
+                lua_pop(L, 1);
+            }
+            lua_pop(L, 1);
+        }
+        auto choise = con.showDialog(replic, answers);
+        lua_pushnumber(L, choise);
+    }
 
     return 1;
 }

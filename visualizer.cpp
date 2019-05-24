@@ -166,10 +166,116 @@ void Visualizer::drawRect(short px, short py, unsigned short w, unsigned short h
     for(int i = 0; i < h; i++) {
         cd1.X = px - 1;
         cd1.Y += 1;
+        WriteConsoleOutputCharacterW(*curHandle, empty.c_str(), w+1, cd1, logD2);
         WriteConsoleOutputCharacterW(*curHandle, line.c_str(), 1, cd1, logD2);
         cd1.X += w + 1;
 //        WriteConsoleOutputCharacterW(*curHandle, line.c_str(), 1, cd1, logD2);
     }
+
+}
+
+void Visualizer::putText(wstring wreplic, size_t lineNum, short px, short py, unsigned short w, unsigned short h, bool isAnswer, bool isChecked)
+{
+
+    auto curHandle = getActiveHandler();
+
+    auto tab = isAnswer?5u : 0;
+    px += tab;
+    w -= tab;
+    COORD tempCd = {px, py};
+    size_t start = 0;
+    size_t iter = 0;
+    if(isAnswer) {
+        wstring answerChecker = isChecked? L"[@]":L"[ ]";
+        WriteConsoleOutputCharacterW(*curHandle, answerChecker.c_str(), answerChecker.length(), {short(px-4), py}, logD2);
+    }
+
+    do {
+        auto sub = wreplic.substr(start+lineNum*w, min(wreplic.length() - (start+lineNum*w - tab), static_cast<size_t>(w)));
+
+        WriteConsoleOutputCharacterW(*curHandle, empty.c_str(), w, tempCd, logD2);
+
+        if(isAnswer)
+        {
+            WORD wColors =  (static_cast<WORD>(Color::Black) << 4) | static_cast<WORD>(isChecked ? (Color::LightRed) : (Color::White));
+            WriteConsoleOutputAttribute(*curHandle, &wColors, sub.length(), tempCd, logD2);
+        }
+
+        WriteConsoleOutputCharacterW(*curHandle, sub.c_str(), sub.length(), tempCd, logD2);
+
+        auto tmpCd = tempCd;
+        tmpCd.X += w;
+        tempCd.Y += 1;
+        start += w;
+        iter++;
+    }
+    while (start < wreplic.length() && iter < h);
+}
+
+int Visualizer::showDialog(const char *replic, std::vector<const char*> answers)
+{
+    short posx = 10;
+    short posy = 10;
+    unsigned short w = 40;
+    unsigned short h = 40;
+    auto wreplic = utf8_decode(replic);
+    std::vector<wstring> wanswers;
+    for(auto answer : answers) {
+        wanswers.push_back(utf8_decode(answer));
+    }
+
+//    auto curHandle = getActiveHandler();
+
+    drawRect(posx, posy, w, h);
+
+//    WriteConsoleOutputCharacterW(*curHandle, wreplic.c_str(), min(w, static_cast<unsigned short>(wreplic.length())), tempCd, logD2);
+
+//    COORD cd = {posx, posy};
+//    auto len = wreplic.length();
+    unsigned short maximumHeight = static_cast<unsigned short>((wreplic.length()/w - h )*1.1);
+
+    auto key = 0;
+
+    unsigned short lineNum = 0;
+    auto selectedAnswer = 0u;
+    do {
+        putText(wreplic, lineNum, posx, posy, w, h, false, false);
+
+        for(auto i = 0u; i < wanswers.size(); i++) {
+            putText(wanswers[i], 0, posx, posy + static_cast<short>(maximumHeight - lineNum + i + 4), w, h, true, selectedAnswer == i);
+        }
+
+
+        key = getch();
+        if(key == 224 || key == 0){
+            key = getch();
+        }
+
+        switch (key) {
+            case static_cast<int>(Actions::down):
+//                lineNum += (lineNum*w +w*h+1u < wreplic.length())?1:0;
+            selectedAnswer ++;
+            if(selectedAnswer >= wanswers.size())
+                selectedAnswer=0;
+
+            break;
+            case static_cast<int>(Actions::up):
+//                lineNum -= (lineNum>0)?1:0;
+                if(selectedAnswer == 0)
+                    selectedAnswer = wanswers.size();
+                selectedAnswer--;
+
+            break;
+            case static_cast<int>(Actions::home):
+//                lineNum = 0;
+            break;
+            default:
+                break;
+
+        }
+    } while (key != 13 && key != 27);
+
+    return static_cast<int>(selectedAnswer);
 }
 
 void Visualizer::putWarning(const char ch[], short posx, short posy, unsigned short w, unsigned short h)
