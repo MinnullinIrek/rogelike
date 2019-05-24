@@ -47,6 +47,10 @@ class Visualizer
 {
 //    Q_OBJECT
 
+    const wstring line = L"##################################################################################################################################";
+    const wstring empty = L"                                                                                                                                  ";
+
+
     HANDLE firstConsole;
 
     array<HANDLE, 2> handles;
@@ -55,6 +59,7 @@ class Visualizer
     void setActiveBuffer(HANDLE h);
 
     HANDLE *getActiveHandler();
+    void drawRect(short px, short py, unsigned short w, unsigned short h);
 
 public:
     explicit Visualizer();
@@ -88,7 +93,7 @@ static int l_putCh (lua_State *L) {
 
 
 
-    con.putchar(ch, len, cdX, cdY, colorBg, colorFg);
+    con.putchar(ch, static_cast<int>(len), static_cast<short>(cdX), static_cast<short>(cdY), static_cast<int>(colorBg), static_cast<int>(colorFg));
 
     return 0;
 }
@@ -120,9 +125,17 @@ static int l_showWarning(lua_State *L)
     auto h          = lua_tointeger(L,4);
     auto w          = lua_tointeger(L,5);
 
-    con.putWarning(ch, posx, posy, h, w );
+    con.putWarning(ch, static_cast<short>(posx), static_cast<short>(posy), static_cast<unsigned short>(h), static_cast<unsigned short>(w) );
 
     return 0;
+}
+
+static int l_showDialog(lua_State *)
+{
+
+
+
+    return 1;
 }
 
 
@@ -202,6 +215,7 @@ static const struct luaL_Reg conLib [] = {
     {"printBuffer",     l_printBuffer},
     {"get",             l_get},
     {"showWarning",     l_showWarning}, // text,posx, posy, h, w
+    {"showDialog",      l_showDialog}, // t
 
 
 
