@@ -2,37 +2,10 @@
 print(xpcall(function()
 	
 	local longText = [[
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is some long long very very long text. one of the longest texsts ever or not/
-		fgdgdg jkjyu kj jlkfg kf kljlkrtje t keljrtlkjert iojsdlfj kjltejrokjg; ijklghj weapon
-		dgjiojgkjoipkl lfksf;lgk ew wk;lkg kwops' slfgko skg;ls'joiwm kwjgiow ijglkj ;wjgwioj 
-		kwopjgl;si ijgl;kjgi kjb[k'ak ]qp;lgsk  kl'[oiwl kp[k;'s k[ok;'lkgsp[ok kpokgk opk l;
-		sk;lkgpok;lkpkg;lkpwgk; k;lslfgkopwkjklkj kl;sgj[pok lgk;'lgkop ok;lfgk ok;lk ;lkgsg
-		this is the texsts end
+			500 лет орден €нычаров наращивает свою мощь, славу и вли€ние. 
+			Ёто не устраивало многих правителей.
+			ѕри этом множество детей отправл€етс€ дл€ обучени€ с дальнейшим вступлени€ в орден.
+			—реди этих детей есть и вы.
 	]]
 	
 	conLib.showWarning(longText, 10, 10, 40, 40)

@@ -212,6 +212,29 @@ void Visualizer::putText(wstring wreplic, size_t lineNum, short px, short py, un
     while (start < wreplic.length() && iter < h);
 }
 
+std::string Visualizer::getText()
+{
+    auto curHandle = getActiveHandler();
+    std::string str;
+    int key = 0;
+  //  while(key != static_cast<int>(Actions::enter)) {
+    COORD tempCd = {0,0};
+    while(key != static_cast<int>(Actions::enter)) {
+
+        key = static_cast<char>(getch());
+        std::string s = "";
+        s +=static_cast<char>(key);
+        str += s;
+
+        WriteConsoleOutputCharacterA(*curHandle, s.c_str(), 1, tempCd, logD2);
+        tempCd.X++;
+
+    }
+
+
+    return str;
+}
+
 int Visualizer::showDialog(const char *replic, std::vector<const char*> answers)
 {
     short posx = 10;

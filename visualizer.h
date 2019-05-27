@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <assert.h>
 #include <vector>
+#include <iostream>
 
 extern "C" {
 # include <lua.h>
@@ -69,6 +70,7 @@ public:
     void putchar(const char ch[], int count, short cdx, short cdy, int bg, int fg);
     void putWarning(const char ch[], short posx, short posy, unsigned short w, unsigned short h);
     int showDialog(const char *replic, std::vector<const char*> answers);
+    std::string getText();
     void setMainBuffer(int val);
 //signals:
     void toPut();//const VisObject & visObject
@@ -131,6 +133,11 @@ static int l_showWarning(lua_State *L)
     con.putWarning(ch, static_cast<short>(posx), static_cast<short>(posy), static_cast<unsigned short>(h), static_cast<unsigned short>(w) );
 
     return 0;
+}
+
+static int l_getString(lua_State *L){
+    auto s = con.getText();
+    return 1;
 }
 
 static int l_showDialog(lua_State *L)
@@ -238,6 +245,7 @@ static const struct luaL_Reg conLib [] = {
     {"get",             l_get},
     {"showWarning",     l_showWarning}, // text,posx, posy, h, w
     {"showDialog",      l_showDialog}, // t
+    {"getString",       l_getString}, // => text
 
 
 
